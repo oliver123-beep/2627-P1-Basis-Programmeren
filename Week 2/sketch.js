@@ -1,15 +1,29 @@
 // stoplicht 
 let licht = 0; 
- 
+let zon = 500;
+let wolk = 0;
+let wolk2 = 0
+let wolk3 = 0
+
 function setup() { 
   createCanvas(600, 400); 
 } 
  
 function draw() { 
   background(220); 
+  text(frameCount, 20, 20);
   //lucht
   fill(0,100,255,100)
   rect(0,0,600,400)
+  //zon
+  fill(200,200,0,100)
+  circle(zon,60,100)
+  fill(200,200,0,200)
+  circle(zon,60,70)
+  fill(225,200,0,)
+  circle(zon,60,50)
+  zon = frameCount % width
+  
  
 //gras
   
@@ -28,24 +42,24 @@ function draw() {
   triangle(350,270,400,100,500,270)
   triangle(250,270,300,50,400,270)
   strokeWeight(0)
-  //zon
-  fill(200,200,0,100)
-  circle(500,90,100)
-  fill(200,200,0,200)
-  circle(500,90,70)
-  fill(225,200,0,)
-  circle(500,90,50)
+  
   //wolk
+  wolk = frameCount % width
+  
   fill(255,255,255)
-  circle(100,50,50)
-  circle(130,50,70)
-  circle(160,55,50)
-  circle(300,70,50)
-  circle(330,70,70)
-  circle(360,75,50)
-  circle(500,20,50)
-  circle(530,20,70)
-  circle(560,25,50)
+  circle(100 - wolk, 50, 50)
+  circle(130 - wolk, 50, 70)
+  circle(160 - wolk, 55, 50)
+   
+  wolk2 = frameCount % width
+  circle(300 - wolk2, 70, 50)
+  circle(330 - wolk2, 70, 70)
+  circle(360 - wolk2, 75, 50)
+  wolk3 = frameCount % 310
+  circle(500 - wolk3, 20, 50)
+  circle(530 - wolk3, 20, 70)
+  circle(560 - wolk3, 25, 50)
+  
   // stoplicht 
   strokeWeight(1); 
   fill(128,128,128); 
@@ -80,12 +94,30 @@ function draw() {
   rect(438,225,25,60); 
   //auto
   strokeWeight(1)
+  //auto rood
   fill(255,0,0)
-  rect(50,300,100,50)
+  rect(50,300,80,50)
+  rect(130,320,30,30)
+  //auto groen
   fill(0,255,0)
-  rect(200,300,100,50)
+  rect(200,300,80,50)
+  rect(280,320,30,30)
+  //auto blauw
   fill(0,0,255)
-  rect(400,300,100,50)
+  rect(400,300,80,50)
+  rect(480,320,30,30)
+  //wielen
+  fill(0,0,0)
+  //rood auto wielen
+  circle(75,350,25)
+  circle(125,350,25)
+  //groen auto wielen
+  circle(225,350,25)
+  circle(275,350,25)
+  //blauw auto wielen
+  circle(425,350,25)
+  circle(475,350,25)
+
   //boom
   strokeWeight(0)
   fill(150, 75, 0,)
@@ -103,6 +135,8 @@ function draw() {
   circle(310,220,50)
   circle(210,220,50)
   circle(110,325,50)
+
+  
   
   
 } 
