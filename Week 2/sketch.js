@@ -1,17 +1,18 @@
 // stoplicht 
 let licht = 0; 
-let zon = 500;
+let zon = 0;
 let wolk = 0;
-let wolk2 = 0
-let wolk3 = 0
+let auto = 0;
+
+
 
 function setup() { 
-  createCanvas(600, 400); 
+  createCanvas(600, 400) 
 } 
  
 function draw() { 
-  background(220); 
-  text(frameCount, 20, 20);
+  background(220) 
+  text(frameCount, 20, 20)
   //lucht
   fill(0,100,255,100)
   rect(0,0,600,400)
@@ -44,79 +45,119 @@ function draw() {
   strokeWeight(0)
   
   //wolk
-  wolk = frameCount % width
-  
+  //800 is het moment waar de wolken resetten
+  wolk = frameCount % 800
   fill(255,255,255)
+  //wolk 1
   circle(100 - wolk, 50, 50)
   circle(130 - wolk, 50, 70)
   circle(160 - wolk, 55, 50)
-   
-  wolk2 = frameCount % width
-  circle(300 - wolk2, 70, 50)
-  circle(330 - wolk2, 70, 70)
-  circle(360 - wolk2, 75, 50)
-  wolk3 = frameCount % 310
-  circle(500 - wolk3, 20, 50)
-  circle(530 - wolk3, 20, 70)
-  circle(560 - wolk3, 25, 50)
-  
+//wolk1 andere kant met + 800 x coordinaten 
+  circle(900 - wolk, 50, 50)
+  circle(930 - wolk, 50, 70)
+  circle(960 - wolk, 55, 50)
+   //wolk2
+  circle(300 - wolk, 70, 50)
+  circle(330 - wolk, 70, 70)
+  circle(360 - wolk, 75, 50)
+
+  circle(1100 - wolk, 70, 50)
+  circle(1130 - wolk, 70, 70)
+  circle(1160 - wolk, 75, 50)
+  //wolk3
+  circle(500 - wolk, 20, 50)
+  circle(530 - wolk, 20, 70)
+  circle(560 - wolk, 25, 50)
+
+  circle(1300 - wolk, 20, 50)
+  circle(1330 - wolk, 20, 70)
+  circle(1360 - wolk, 25, 50)
   // stoplicht 
-  strokeWeight(1); 
-  fill(128,128,128); 
-  rect(425,75,50,150); 
+  strokeWeight(1)
+  fill(128,128,128) 
+  rect(425,75,50,150) 
  
   // rood 
   if (licht == 0) { 
-    fill(255,0,0); 
+    fill(255,0,0) 
   } else { 
-    fill(80,0,0); 
+    fill(80,0,0) 
   } 
-  circle(450,100,30); 
+  circle(450,100,30) 
  
   // oranje 
   if (licht == 2) { 
-    fill(255,128,0); 
+    fill(255,128,0) 
   } else { 
-    fill(80,50,0); 
+    fill(80,50,0) 
   } 
-  circle(450,150,30); 
+  circle(450,150,30) 
  
   // groen 
   if (licht == 1) { 
-    fill(0,255,0); 
+    fill(0,255,0) 
   } else { 
-    fill(0,80,0); 
+    fill(0,80,0)
   } 
-  circle(450,200,30); 
+  circle(450,200,30)
  
   // paal 
-  fill(128,128,128); 
-  rect(438,225,25,60); 
+  fill(128,128,128) 
+  rect(438,225,25,60) 
   //auto
-  strokeWeight(1)
-  //auto rood
-  fill(255,0,0)
-  rect(50,300,80,50)
-  rect(130,320,30,30)
-  //auto groen
-  fill(0,255,0)
-  rect(200,300,80,50)
-  rect(280,320,30,30)
-  //auto blauw
-  fill(0,0,255)
-  rect(400,300,80,50)
-  rect(480,320,30,30)
-  //wielen
-  fill(0,0,0)
-  //rood auto wielen
-  circle(75,350,25)
-  circle(125,350,25)
-  //groen auto wielen
-  circle(225,350,25)
-  circle(275,350,25)
-  //blauw auto wielen
-  circle(425,350,25)
-  circle(475,350,25)
+  auto = frameCount % 680
+strokeWeight(1)
+
+// auto rood
+fill(255,0,0)
+rect(auto - 110, 300, 80, 50)
+rect(auto - 30, 320, 30, 30)
+
+// opnieuw links
+rect(auto - 790, 300, 80, 50)
+rect(auto - 710, 320, 30, 30)
+
+// rood auto wielen
+fill(0,0,0)
+circle(auto + -90,350,25)
+circle(auto + -40,350,25)
+
+circle(auto - 580,350,25)
+circle(auto - 610,350,25)
+
+// auto groen
+fill(0,255,0)
+rect(auto + 250,320,80,50)
+rect(auto + 330,340,30,30)
+
+rect(auto - 430,320,80,50)
+rect(auto - 350,340,30,30)
+
+// groen auto wielen
+fill(0,0,0)
+circle(auto + 270,370,25)
+circle(auto + 320,370,25)
+
+circle(auto - 410,370,25)
+circle(auto - 360,370,25)
+
+
+// auto blauw
+fill(0,0,255)
+rect(auto + 400,300,80,50)
+rect(auto + 480,320,30,30)
+
+// blauw auto opnieuw links
+rect(auto - 280,300,80,50)
+rect(auto - 200,320,30,30)
+
+// blauw auto wielen
+fill(0,0,0)
+circle(auto + 425,350,25)
+circle(auto + 475,350,25)
+
+circle(auto - 255,350,25)
+circle(auto - 205,350,25)
 
   //boom
   strokeWeight(0)
@@ -144,11 +185,11 @@ function draw() {
 //elke keer dat je op enter drukt gaat het licht een stap verder 
 function keyPressed() { 
   if (keyCode == ENTER) { 
-    licht = licht + 1; 
+    licht = licht + 1 
  
     // als het licht groter is dan 2, dan wordt het weer 0 
     if (licht > 2) { 
-      licht = 0; 
+      licht = 0 
     } 
   } 
 } 
