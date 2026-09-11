@@ -103,27 +103,32 @@ function draw() {
  
   // paal 
   fill(128,128,128) 
-  rect(438,225,25,60) 
+  rect(438,225,25,60)
+//auto's stoppen
+  if (licht == 0){
+  
+  }
   //auto
   auto = frameCount % 680
 strokeWeight(1)
 
 // auto rood
 fill(255,0,0)
-rect(auto - 110, 300, 80, 50)
-rect(auto - 30, 320, 30, 30)
+rect(auto + 100, 300, 80, 50)
+rect(auto + 180, 320, 30, 30)
 
 // opnieuw links
-rect(auto - 790, 300, 80, 50)
-rect(auto - 710, 320, 30, 30)
+fill(255,0,0)
+rect(auto - 580, 300, 80, 50)
+rect(auto - 500, 320, 30, 30)
 
 // rood auto wielen
 fill(0,0,0)
-circle(auto + -90,350,25)
-circle(auto + -40,350,25)
+circle(auto + 120,350,25)
+circle(auto + 170,350,25)
 
-circle(auto - 580,350,25)
-circle(auto - 610,350,25)
+circle(auto - 560,350,25)
+circle(auto - 510,350,25)
 
 // auto groen
 fill(0,255,0)
@@ -176,6 +181,7 @@ circle(auto - 205,350,25)
   circle(310,220,50)
   circle(210,220,50)
   circle(110,325,50)
+  
 
   
   
