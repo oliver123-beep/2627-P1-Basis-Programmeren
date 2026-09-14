@@ -104,12 +104,16 @@ function draw() {
   // paal 
   fill(128,128,128) 
   rect(438,225,25,60)
-//auto's stoppen
+ //auto's stoppen
   if (licht == 0){
-  
+    
+  }else if (licht == 2){
+  auto = (auto + deltaTime * 0.1) % 680
+  } else{
+    auto = (auto + deltaTime * 0.5) % 680
   }
   //auto
-  auto = frameCount % 680
+  
 strokeWeight(1)
 
 // auto rood
@@ -181,10 +185,6 @@ circle(auto - 205,350,25)
   circle(310,220,50)
   circle(210,220,50)
   circle(110,325,50)
-  
-
-  
-  
   
 } 
  
