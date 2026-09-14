@@ -3,6 +3,12 @@ let licht = 0;
 let zon = 0;
 let wolk = 0;
 let auto = 0;
+let auto2 = 0
+let boom = 0;
+let boom2 = 0
+let autoY = 0
+
+
 
 
 
@@ -112,18 +118,30 @@ function draw() {
   } else{
     auto = (auto + deltaTime * 0.5) % 680
   }
-  //auto
+
+if (licht == 0){
+    
+  }else if (licht == 2){
+  auto2 = (auto2 + deltaTime * 0.2) % 680
+  } else{
+    auto2 = (auto2 + deltaTime * 1) % 680
+  }
   
+if (licht == 0 && auto > 350){
+  auto = 350
+}else 
+
+  //auto 
 strokeWeight(1)
 
 // auto rood
 fill(255,0,0)
-rect(auto + 100, 300, 80, 50)
+rect(auto + 100, autoY + 300, 80, 50)
 rect(auto + 180, 320, 30, 30)
 
 // opnieuw links
 fill(255,0,0)
-rect(auto - 580, 300, 80, 50)
+rect(auto - 580, autoY - 300, 80, 50)
 rect(auto - 500, 320, 30, 30)
 
 // rood auto wielen
@@ -133,23 +151,6 @@ circle(auto + 170,350,25)
 
 circle(auto - 560,350,25)
 circle(auto - 510,350,25)
-
-// auto groen
-fill(0,255,0)
-rect(auto + 250,320,80,50)
-rect(auto + 330,340,30,30)
-
-rect(auto - 430,320,80,50)
-rect(auto - 350,340,30,30)
-
-// groen auto wielen
-fill(0,0,0)
-circle(auto + 270,370,25)
-circle(auto + 320,370,25)
-
-circle(auto - 410,370,25)
-circle(auto - 360,370,25)
-
 
 // auto blauw
 fill(0,0,255)
@@ -168,7 +169,27 @@ circle(auto + 475,350,25)
 circle(auto - 255,350,25)
 circle(auto - 205,350,25)
 
-  //boom
+  // auto groen
+fill(0,255,0)
+rect(auto2 + 250,320,80,50)
+rect(auto2 + 330,340,30,30)
+
+rect(auto2 - 430,320,80,50)
+rect(auto2 - 350,340,30,30)
+
+// groen auto wielen
+fill(0,0,0)
+circle(auto2 + 270,370,25)
+circle(auto2 + 320,370,25)
+
+circle(auto2 - 410,370,25)
+circle(auto2 - 360,370,25)
+  //boom 
+  boom = 0 + Math .sin(frameCount * 0.1) * 3
+  boom2 = 0 + Math .cos(frameCount * 0.1) * 3
+ 
+ 
+  
   strokeWeight(0)
   fill(150, 75, 0,)
   rect(50,220,10,70)
@@ -176,15 +197,19 @@ circle(auto - 205,350,25)
   rect(200,220,10,70)
   rect(100,325,10,70)
   fill(0,255,0,)
-  circle(50,220,50)
-  circle(300,220,50)
-  circle(200,220,50)
-  circle(100,325,50)
+  circle(boom + 40,220,50)
+  
+  circle(boom + 300,220,50)
+  circle(boom + 200,220,50)
+  circle(boom + 100,325,50)
   fill(0,100,0)
-  circle(60,220,50)
-  circle(310,220,50)
-  circle(210,220,50)
-  circle(110,325,50)
+  circle( 60 - boom2,220,50)
+  circle(310 - boom2,220,50)
+  circle(210 - boom2,220,50)
+  circle(110 - boom2,325,50)
+
+  fill(0,0,0)
+  rect (450, 300, 20,200)
   
 } 
  
