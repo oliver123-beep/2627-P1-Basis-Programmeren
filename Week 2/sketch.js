@@ -18,6 +18,9 @@ let stopunt = auto3 + 450
 
 function setup() { 
   createCanvas(600, 400) 
+  // Set angle mode to degrees
+  angleMode(DEGREES);
+  
 } 
  
 function draw() { 
@@ -34,7 +37,15 @@ function draw() {
   fill(225,200,0,)
   circle(zon,60,50)
   zon = frameCount % width
+   
+  //maan
+  fill(255,255,255)
+  translate(width/2, height-100);
+  rotate(frameCount );
+  strokeWeight(5);
+  circle(200,0,80)
   
+
  
 //gras
   
@@ -152,7 +163,7 @@ strokeWeight(1)
 
 // auto rood
 fill(255,0,0)
-rect(auto , 300, 80, 50)
+rect(auto, 300, 80, 50)
 rect(auto + 80, 320, 30, 30)
 
 // opnieuw links
