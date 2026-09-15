@@ -128,7 +128,7 @@ if (licht == 0){
   }
   
 if (licht == 0 && auto > 350){
-  auto = 350
+  
 }else 
 
   //auto 
@@ -136,12 +136,12 @@ strokeWeight(1)
 
 // auto rood
 fill(255,0,0)
-rect(auto + 100, autoY + 300, 80, 50)
+rect(auto + 100, 300, 80, 50)
 rect(auto + 180, 320, 30, 30)
 
 // opnieuw links
 fill(255,0,0)
-rect(auto - 580, autoY - 300, 80, 50)
+rect(auto - 580, 300, 80, 50)
 rect(auto - 500, 320, 30, 30)
 
 // rood auto wielen
@@ -208,8 +208,7 @@ circle(auto2 - 360,370,25)
   circle(210 - boom2,220,50)
   circle(110 - boom2,325,50)
 
-  fill(0,0,0)
-  rect (450, 300, 20,200)
+ 
   
 } 
  
