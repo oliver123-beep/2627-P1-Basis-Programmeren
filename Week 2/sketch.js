@@ -197,8 +197,8 @@ circle(auto2 - 360,370,25)
   rect(200,220,10,70)
   rect(100,325,10,70)
   fill(0,255,0,)
+ 
   circle(boom + 40,220,50)
-  
   circle(boom + 300,220,50)
   circle(boom + 200,220,50)
   circle(boom + 100,325,50)
