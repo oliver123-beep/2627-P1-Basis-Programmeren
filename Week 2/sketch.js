@@ -4,9 +4,13 @@ let zon = 0;
 let wolk = 0;
 let auto = 0;
 let auto2 = 0
+let auto3 = 0
 let boom = 0;
 let boom2 = 0
 let autoY = 0
+let stopunt = auto3 + 450
+
+
 
 
 
@@ -111,63 +115,72 @@ function draw() {
   fill(128,128,128) 
   rect(438,225,25,60)
  //auto's stoppen
-  if (licht == 0){
-    
+  if (licht == 0 ){
+    if (auto < 350 || auto > 400) {
+      auto = auto + deltaTime * 0.5;} 
   }else if (licht == 2){
   auto = (auto + deltaTime * 0.1) % 680
   } else{
     auto = (auto + deltaTime * 0.5) % 680
   }
+if (licht == 0 ){ 
+  if (auto2 < 800 || auto2 > 900) {
+    auto2 = auto2 + deltaTime * 0.5;}
 
-if (licht == 0){
-    
   }else if (licht == 2){
   auto2 = (auto2 + deltaTime * 0.2) % 680
   } else{
     auto2 = (auto2 + deltaTime * 1) % 680
   }
-  
-if (licht == 0 && auto > 350){
-  
-}else 
+if (licht == 0 ){
+  if (auto3 < 500 || auto3 > 550){ 
+    auto3 = auto3 + deltaTime * 0.5}
+    if (auto3 > 750) {
+      auto3 = 0
+    }
+  }else if (licht == 2){
+  auto3 = (auto3 + deltaTime * 0.1) % 680
+  } else{
+    auto3 = (auto3 + deltaTime * 0.5) % 680
+  }
+
+text(auto2, 20, 40)
+ 
 
   //auto 
 strokeWeight(1)
 
 // auto rood
 fill(255,0,0)
-rect(auto + 100, 300, 80, 50)
-rect(auto + 180, 320, 30, 30)
+rect(auto , 300, 80, 50)
+rect(auto + 80, 320, 30, 30)
 
 // opnieuw links
-fill(255,0,0)
-rect(auto - 580, 300, 80, 50)
-rect(auto - 500, 320, 30, 30)
+if (auto > width) {
+  auto = -80;
+}
 
 // rood auto wielen
 fill(0,0,0)
-circle(auto + 120,350,25)
-circle(auto + 170,350,25)
-
-circle(auto - 560,350,25)
-circle(auto - 510,350,25)
+circle(auto + 20,350,25)
+circle(auto + 70,350,25)
 
 // auto blauw
 fill(0,0,255)
-rect(auto + 400,300,80,50)
-rect(auto + 480,320,30,30)
+rect(auto3 + 400,300,80,50)
+rect(auto3 + 480,320,30,30)
 
 // blauw auto opnieuw links
-rect(auto - 280,300,80,50)
-rect(auto - 200,320,30,30)
+rect(auto3 - 280,300,80,50)
+rect(auto3 - 200,320,30,30)
 
 // blauw auto wielen
 fill(0,0,0)
-circle(auto + 425,350,25)
-circle(auto + 475,350,25)
+circle(auto3 + 425,350,25)
+circle(auto3 + 475,350,25)
 
-circle(auto - 255,350,25)
-circle(auto - 205,350,25)
+circle(auto3 - 255,350,25)
+circle(auto3 - 205,350,25)
 
   // auto groen
 fill(0,255,0)
