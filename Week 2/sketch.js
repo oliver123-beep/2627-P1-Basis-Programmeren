@@ -19,7 +19,7 @@ let stopunt = auto3 + 450
 function setup() { 
   createCanvas(600, 400) 
   // Set angle mode to degrees
-  angleMode(DEGREES);
+ 
   
 } 
  
@@ -30,22 +30,19 @@ function draw() {
   fill(0,100,255,100)
   rect(0,0,600,400)
   //zon
+  strokeWeight(0)
   fill(200,200,0,100)
   circle(zon,60,100)
   fill(200,200,0,200)
   circle(zon,60,70)
   fill(225,200,0,)
   circle(zon,60,50)
-  zon = frameCount % width
+  zon = frameCount % width 
+  frameRate(60)
+   if (zon == width)
+  {background(0,0,20)}
    
-  //maan
-  fill(255,255,255)
-  translate(width/2, height-100);
-  rotate(frameCount );
-  strokeWeight(5);
-  circle(200,0,80)
-  
-
+  circle(-50,60,80)
  
 //gras
   
@@ -155,7 +152,7 @@ if (licht == 0 ){
     auto3 = (auto3 + deltaTime * 0.5) % 680
   }
 
-text(auto2, 20, 40)
+
  
 
   //auto 
@@ -231,6 +228,9 @@ circle(auto2 - 360,370,25)
   circle(310 - boom2,220,50)
   circle(210 - boom2,220,50)
   circle(110 - boom2,325,50)
+
+  
+  
 
  
   
