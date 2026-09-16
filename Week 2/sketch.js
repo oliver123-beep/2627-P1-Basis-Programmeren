@@ -1,6 +1,7 @@
 // stoplicht 
 let licht = 0; 
 let zon = 0;
+let maan = -50
 let wolk = 0;
 let auto = 0;
 let auto2 = 0
@@ -8,8 +9,9 @@ let auto3 = 0
 let boom = 0;
 let boom2 = 0
 let autoY = 0
-let stopunt = auto3 + 450
-
+let daynight = 0
+let day = 0
+let night = 0
 
 
 
@@ -18,14 +20,16 @@ let stopunt = auto3 + 450
 
 function setup() { 
   createCanvas(600, 400) 
-  // Set angle mode to degrees
- 
-  
+ night = color(0,0,0)
+ day = color(255,255,255)
+
 } 
  
 function draw() { 
-  background(220) 
+  let daynight = lerpColor(day,night,zon)
+  background(daynight) 
   text(frameCount, 20, 20)
+  text (zon, 20, 40)
   //lucht
   fill(0,100,255,100)
   rect(0,0,600,400)
@@ -37,12 +41,16 @@ function draw() {
   circle(zon,60,70)
   fill(225,200,0,)
   circle(zon,60,50)
-  zon = frameCount % width 
+  zon = frameCount % 1200 
   frameRate(60)
-   if (zon == width)
-  {background(0,0,20)}
+   if (zon > width)
+  {background(0,0,20)
+    fill(255,255,255)
+   circle(maan,60,80)
+   maan = frameCount % 600
+  }
    
-  circle(-50,60,80)
+   
  
 //gras
   
