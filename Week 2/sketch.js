@@ -14,7 +14,6 @@ let day = 0
 let night = 0
 let licht = 0
 let toeter
-let autoHit = [auto,auto2, auto3]
 
 function preload() {
   toeter = loadSound("https://cdn.pixabay.com/download/audio/2025/08/07/audio_bbccbeb8a8.mp3?filename=dragon-studio-car-honk-386166.mp3")
@@ -274,10 +273,10 @@ circle(auto2 - 360,370,25)
 
   
   
-text(frameCount, 20, 20)
-  text (auto, 20, 40)
-  text (auto2, 20, 60)
-  text (auto3, 20, 80)
+//text(frameCount, 20, 20)
+  //text (auto, 20, 40)
+  //text (auto2, 20, 60)
+  //text (auto3, 20, 80)
 
   
 } 
