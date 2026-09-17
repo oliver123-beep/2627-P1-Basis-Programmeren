@@ -1,7 +1,7 @@
 // stoplicht 
-let licht = 0; 
+let stoplicht = 0; 
 let zon = 0;
-let maan = -50
+let maan = 0
 let wolk = 0;
 let auto = 0;
 let auto2 = 0
@@ -12,8 +12,13 @@ let autoY = 0
 let daynight = 0
 let day = 0
 let night = 0
+let licht = 0
+let toeter
+let autoHit = [auto,auto2, auto3]
 
-
+function preload() {
+  toeter = loadSound("https://cdn.pixabay.com/download/audio/2025/08/07/audio_bbccbeb8a8.mp3?filename=dragon-studio-car-honk-386166.mp3")
+}
 
 
 
@@ -22,18 +27,41 @@ function setup() {
   createCanvas(600, 400) 
  night = color(0,0,0)
  day = color(255,255,255)
-
 } 
  
 function draw() { 
-  let daynight = lerpColor(day,night,zon)
-  background(daynight) 
-  text(frameCount, 20, 20)
-  text (zon, 20, 40)
+
+
+if (zon < width ){
+
+ if (zon < width / 2) {
+      licht = map(zon, 0, width / 2, 0.3, 1)
+    } else {
+      licht = map(zon, width / 2, width, 1, 0.3)
+    }
+
+    daynight = lerpColor(night, day, licht)
+  
+}else {
+  let licht
+
+    if (maan < width / 2) {
+      licht = map(maan, 0, width / 2, 0.3, 0)
+    } else {
+      licht = map(maan, width / 2, width, 0, 0.3)
+    }
+
+    daynight = lerpColor(night, day, licht)
+}
+   background(daynight) 
+  
+  
+
   //lucht
   fill(0,100,255,100)
   rect(0,0,600,400)
   //zon
+if (zon < width){
   strokeWeight(0)
   fill(200,200,0,100)
   circle(zon,60,100)
@@ -41,19 +69,20 @@ function draw() {
   circle(zon,60,70)
   fill(225,200,0,)
   circle(zon,60,50)
-  zon = frameCount % 1200 
-  frameRate(60)
-   if (zon > width)
-  {background(0,0,20)
-    fill(255,255,255)
-   circle(maan,60,80)
-   maan = frameCount % 600
   }
-   
+  zon = frameCount % 1200 
+  
+  //maan
+   if (zon >= width){
+    strokeWeight(5)
+    fill(200,200,200)
+   circle(maan,60,80)
+  }
+   maan = (frameCount - 600) % 1200
    
  
 //gras
-  
+  strokeWeight(0)
   fill(0,255,0)
   rect(0,270,600,200)
   //weg
@@ -104,7 +133,7 @@ function draw() {
   rect(425,75,50,150) 
  
   // rood 
-  if (licht == 0) { 
+  if (stoplicht == 0) { 
     fill(255,0,0) 
   } else { 
     fill(80,0,0) 
@@ -112,7 +141,7 @@ function draw() {
   circle(450,100,30) 
  
   // oranje 
-  if (licht == 2) { 
+  if (stoplicht == 2) { 
     fill(255,128,0) 
   } else { 
     fill(80,50,0) 
@@ -120,7 +149,7 @@ function draw() {
   circle(450,150,30) 
  
   // groen 
-  if (licht == 1) { 
+  if (stoplicht == 1) { 
     fill(0,255,0) 
   } else { 
     fill(0,80,0)
@@ -130,31 +159,35 @@ function draw() {
   // paal 
   fill(128,128,128) 
   rect(438,225,25,60)
- //auto's stoppen
-  if (licht == 0 ){
+ 
+  //auto's stoppen
+  if (stoplicht == 0 ){
     if (auto < 350 || auto > 400) {
       auto = auto + deltaTime * 0.5;} 
-  }else if (licht == 2){
+  }else if (stoplicht == 2){
   auto = (auto + deltaTime * 0.1) % 680
   } else{
     auto = (auto + deltaTime * 0.5) % 680
   }
-if (licht == 0 ){ 
+if (stoplicht == 0 ){ 
   if (auto2 < 800 || auto2 > 900) {
     auto2 = auto2 + deltaTime * 0.5;}
+    if (auto3 > 750) {
+      auto3 = 0
+    }
 
-  }else if (licht == 2){
+  }else if (stoplicht == 2){
   auto2 = (auto2 + deltaTime * 0.2) % 680
   } else{
     auto2 = (auto2 + deltaTime * 1) % 680
   }
-if (licht == 0 ){
+if (stoplicht == 0 ){
   if (auto3 < 500 || auto3 > 550){ 
     auto3 = auto3 + deltaTime * 0.5}
     if (auto3 > 750) {
       auto3 = 0
     }
-  }else if (licht == 2){
+  }else if (stoplicht == 2){
   auto3 = (auto3 + deltaTime * 0.1) % 680
   } else{
     auto3 = (auto3 + deltaTime * 0.5) % 680
@@ -185,6 +218,7 @@ circle(auto + 70,350,25)
 fill(0,0,255)
 rect(auto3 + 400,300,80,50)
 rect(auto3 + 480,320,30,30)
+
 
 // blauw auto opnieuw links
 rect(auto3 - 280,300,80,50)
@@ -218,7 +252,7 @@ circle(auto2 - 360,370,25)
   boom2 = 0 + Math .cos(frameCount * 0.1) * 3
  
  
-  
+  //boomstam
   strokeWeight(0)
   fill(150, 75, 0,)
   rect(50,220,10,70)
@@ -226,11 +260,12 @@ circle(auto2 - 360,370,25)
   rect(200,220,10,70)
   rect(100,325,10,70)
   fill(0,255,0,)
- 
+ //lichte bladeren
   circle(boom + 40,220,50)
   circle(boom + 300,220,50)
   circle(boom + 200,220,50)
   circle(boom + 100,325,50)
+  //donkere bladeren
   fill(0,100,0)
   circle( 60 - boom2,220,50)
   circle(310 - boom2,220,50)
@@ -239,19 +274,54 @@ circle(auto2 - 360,370,25)
 
   
   
+text(frameCount, 20, 20)
+  text (auto, 20, 40)
+  text (auto2, 20, 60)
+  text (auto3, 20, 80)
 
- 
   
 } 
  
 //elke keer dat je op enter drukt gaat het licht een stap verder 
 function keyPressed() { 
   if (keyCode == ENTER) { 
-    licht = licht + 1 
+    stoplicht = stoplicht + 1 
  
     // als het licht groter is dan 2, dan wordt het weer 0 
-    if (licht > 2) { 
-      licht = 0 
+    if (stoplicht > 2) { 
+      stoplicht = 0 
     } 
   } 
 } 
+//toeter
+function mousePressed() {
+  if (mouseX > auto && mouseX < auto + 110 &&
+      mouseY > 300 && mouseY < 350){
+   toeter.play();
+    }
+    if (mouseX > auto3 + 400 && mouseX < auto3 + 510 &&
+      mouseY > 300 && mouseY < 350){
+   toeter.play();
+    }
+    // blauwe auto links
+  if (mouseX > auto3 - 280 && mouseX < auto3 - 170 && 
+     mouseY > 300 && mouseY < 350) {
+    toeter.play()
+  }
+  // groene auto rechts
+  if (mouseX > auto2 + 250 &&
+      mouseX < auto2 + 360 &&
+      mouseY > 300 &&
+      mouseY < 350) {
+    toeter.play()
+  }
+
+  // groene auto links
+  if (mouseX > auto2 - 430 &&
+      mouseX < auto2 - 320 &&
+      mouseY > 320 &&
+      mouseY < 370) {
+    toeter.play()
+  }
+}
+
