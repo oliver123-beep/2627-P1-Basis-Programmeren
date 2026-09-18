@@ -1,12 +1,12 @@
 // stoplicht 
-let stoplicht = 0; 
-let zon = 0;
+let stoplicht = 0
+let zon = 0
 let maan = 0
-let wolk = 0;
-let auto = 0;
+let wolk = 0
+let auto = 0
 let auto2 = 0
 let auto3 = 0
-let boom = 0;
+let boom = 0
 let boom2 = 0
 let autoY = 0
 let daynight = 0
@@ -212,9 +212,9 @@ strokeWeight(1)
 fill(255,0,0)
 rect(auto, 300, 80, 50)
 rect(auto + 80, 320, 30, 30)
-//opnieuw links
+//opnieuw links -680 x coordinaten
 rect(auto - 680, 300, 80, 50)
-rect(auto - 760, 320, 30, 30)
+rect(auto - 600, 320, 30, 30)
 
 
 // rood auto wielen
