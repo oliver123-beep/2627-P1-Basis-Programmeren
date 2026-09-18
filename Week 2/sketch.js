@@ -15,6 +15,7 @@ let night = 0
 let licht = 0
 let toeter
 
+//toeter geluid laden
 function preload() {
   toeter = loadSound("https://cdn.pixabay.com/download/audio/2025/08/07/audio_bbccbeb8a8.mp3?filename=dragon-studio-car-honk-386166.mp3")
 }
@@ -24,13 +25,14 @@ function preload() {
 
 function setup() { 
   createCanvas(600, 400) 
+  //nacht en dag kleuren
  night = color(0,0,0)
  day = color(255,255,255)
 } 
  
 function draw() { 
 
-
+//lerpColor instellen op de beweging van de zon
 if (zon < width ){
 
  if (zon < width / 2) {
@@ -42,6 +44,7 @@ if (zon < width ){
     daynight = lerpColor(night, day, licht)
   
 }else {
+  //lerpColor voor de maan
   let licht
 
     if (maan < width / 2) {
@@ -97,6 +100,7 @@ if (zon < width){
   triangle(350,270,400,100,500,270)
   triangle(250,270,300,50,400,270)
   strokeWeight(0)
+  
   
   //wolk
   //800 is het moment waar de wolken resetten
@@ -159,20 +163,25 @@ if (zon < width){
   fill(128,128,128) 
   rect(438,225,25,60)
  
-  //auto's stoppen
+  //auto's stoppen bij rood
   if (stoplicht == 0 ){
     if (auto < 350 || auto > 400) {
       auto = auto + deltaTime * 0.5;} 
+      if (auto > width){
+      auto = 0
+    }
+    //oranje gaan ze slomer
   }else if (stoplicht == 2){
   auto = (auto + deltaTime * 0.1) % 680
+  //bij groen rijden ze door
   } else{
     auto = (auto + deltaTime * 0.5) % 680
   }
 if (stoplicht == 0 ){ 
   if (auto2 < 800 || auto2 > 900) {
     auto2 = auto2 + deltaTime * 0.5;}
-    if (auto3 > 750) {
-      auto3 = 0
+    if (auto2 > 950){
+      auto2 = 0
     }
 
   }else if (stoplicht == 2){
@@ -183,9 +192,10 @@ if (stoplicht == 0 ){
 if (stoplicht == 0 ){
   if (auto3 < 500 || auto3 > 550){ 
     auto3 = auto3 + deltaTime * 0.5}
-    if (auto3 > 750) {
+    if (auto3 > width){
       auto3 = 0
     }
+    
   }else if (stoplicht == 2){
   auto3 = (auto3 + deltaTime * 0.1) % 680
   } else{
@@ -202,16 +212,18 @@ strokeWeight(1)
 fill(255,0,0)
 rect(auto, 300, 80, 50)
 rect(auto + 80, 320, 30, 30)
+//opnieuw links
+rect(auto - 680, 300, 80, 50)
+rect(auto - 760, 320, 30, 30)
 
-// opnieuw links
-if (auto > width) {
-  auto = -80;
-}
 
 // rood auto wielen
 fill(0,0,0)
 circle(auto + 20,350,25)
 circle(auto + 70,350,25)
+circle(auto - 660,350,25)
+circle(auto - 610,350,25)
+
 
 // auto blauw
 fill(0,0,255)
@@ -246,7 +258,7 @@ circle(auto2 + 320,370,25)
 
 circle(auto2 - 410,370,25)
 circle(auto2 - 360,370,25)
-  //boom 
+  //boom beweging
   boom = 0 + Math .sin(frameCount * 0.1) * 3
   boom2 = 0 + Math .cos(frameCount * 0.1) * 3
  
@@ -273,10 +285,8 @@ circle(auto2 - 360,370,25)
 
   
   
-//text(frameCount, 20, 20)
-  //text (auto, 20, 40)
-  //text (auto2, 20, 60)
-  //text (auto3, 20, 80)
+
+
 
   
 } 
@@ -292,16 +302,16 @@ function keyPressed() {
     } 
   } 
 } 
-//toeter
+// als je op een auto kilkt toeter het
 function mousePressed() {
   if (mouseX > auto && mouseX < auto + 110 &&
       mouseY > 300 && mouseY < 350){
    toeter.play();
-    }
-    if (mouseX > auto3 + 400 && mouseX < auto3 + 510 &&
+  }
+  if (mouseX > auto3 + 400 && mouseX < auto3 + 510 &&
       mouseY > 300 && mouseY < 350){
    toeter.play();
-    }
+  }
     // blauwe auto links
   if (mouseX > auto3 - 280 && mouseX < auto3 - 170 && 
      mouseY > 300 && mouseY < 350) {
@@ -309,9 +319,8 @@ function mousePressed() {
   }
   // groene auto rechts
   if (mouseX > auto2 + 250 &&
-      mouseX < auto2 + 360 &&
-      mouseY > 300 &&
-      mouseY < 350) {
+      mouseX < auto2 + 360 && 
+      mouseY > 300 && mouseY < 350) {
     toeter.play()
   }
 
