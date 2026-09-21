@@ -20,7 +20,14 @@ function setup() {
 
 function draw() {
 
-  background(220)
+  if (speler1 == true )
+  { 
+    background(255, 0, 0)
+  }else if (speler2 == true)
+  {
+    background(0, 0, 255)
+  }if (RedWin=true){ 
+     background(255,0,0)}
 
   // Groot bord
   fill(0)
@@ -159,6 +166,10 @@ function draw() {
     text("blue wins",100,90)
     BlueWin = true
   }
+  fill(0)
+  textSize(20)
+  text("press enter to reset",100,350)
+  
 }
 
 
