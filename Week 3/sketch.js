@@ -11,23 +11,37 @@ let RedWin = false
 let BlueWin = false
 let speler1 = true
 let speler2 = false
+let click 
+let reset
 
-
-function setup() {
+function preload() {
+  click = loadSound("https://cdn.pixabay.com/audio/2025/01/20/audio_9afb73ceb5.mp3");
+  reset = loadImage("refresh-page-option.png");
+}
+  function setup() {
   createCanvas(400, 400)
+  
 }
 
 
 function draw() {
-
+  // kleur voor wie aan de beurt is
   if (speler1 == true )
   { 
     background(255, 0, 0)
   }else if (speler2 == true)
   {
     background(0, 0, 255)
-  }if (RedWin=true){ 
-     background(255,0,0)}
+  }
+  //kleur voor wie er gewonen heeft
+  if (RedWin == true)
+  { 
+   background(255,0,0)
+  }
+  else if (BlueWin == true)
+  {
+    background(0,0,255)
+  }
 
   // Groot bord
   fill(0)
@@ -36,6 +50,8 @@ function draw() {
 
   // VAKJE 1
   fill(255)
+  if (RedWin == false && BlueWin == false)
+  {
   if (mouseX > 110 && mouseX < 160 && mouseY > 110 && mouseY < 160){
     fill(200)
   }
@@ -43,6 +59,7 @@ function draw() {
     fill(255, 0, 0)
   } else if (vierkant1 == 2) {
     fill(0, 0, 255)
+  }
   }
   rect(110, 110, 50, 50, 10)
 
@@ -154,8 +171,10 @@ function draw() {
     if (BlueWin == false)
  {
     fill(0)
-    text("red wins",20,20)
+    textSize(32)
+    text("red wins",100,90)
     RedWin = true
+    image(reset, 250,50, 50,50)
   }
  //blue wins
   if ((vierkant1 == 2 && vierkant2 == 4 && vierkant3 == 6)||(vierkant1 == 2 && vierkant4 == 8 && vierkant7 == 14)||(vierkant1 == 2 && vierkant5 == 10 && vierkant9 == 18)||(vierkant2 == 4 && vierkant5 == 10 && vierkant8 == 16)||(vierkant3 == 6 && vierkant6 == 12 && vierkant9 == 18)||(vierkant4 == 8 && vierkant5 == 10 && vierkant6 == 12)||(vierkant7 == 14 && vierkant8 == 16 && vierkant9 == 18)||(vierkant3 == 6 && vierkant5 == 10 && vierkant7 == 14))
@@ -165,10 +184,15 @@ function draw() {
     textSize(32)
     text("blue wins",100,90)
     BlueWin = true
+    image(reset, 250,50, 50,50)
+
   }
+  
   fill(0)
   textSize(20)
   text("press enter to reset",100,350)
+
+
   
 }
 
@@ -187,12 +211,14 @@ function mousePressed() {
     vierkant1 = 1
     speler1 = false
     speler2 = true
+    click.play();
 
   } else if (mouseX > 110 && mouseX < 160 && mouseY > 110 && mouseY < 160 && vierkant1 == 0 && speler1 == false) {
 
     vierkant1 = 2
     speler1 = true
     speler2 = false
+    click.play();
   }
 
 
@@ -202,12 +228,14 @@ function mousePressed() {
     vierkant2 = 3
     speler1 = false
     speler2 = true
+    click.play() 
 
   } else if (mouseX > 175 && mouseX < 225 && mouseY > 110 && mouseY < 160 && vierkant2 == 0 && speler1 == false) {
 
     vierkant2 = 4
     speler1 = true
     speler2 = false
+    click.play()
   }
 
 
@@ -217,12 +245,13 @@ function mousePressed() {
     vierkant3 = 5
     speler1 = false
     speler2 = true
-
+    click.play()
   } else if (mouseX > 240 && mouseX < 290 && mouseY > 110 && mouseY < 160 && vierkant3 == 0 && speler1 == false) {
 
     vierkant3 = 6
     speler1 = true
     speler2 = false
+    click.play()
   }
 
 
@@ -232,12 +261,14 @@ function mousePressed() {
     vierkant4 = 7
     speler1 = false
     speler2 = true
+    click.play()
 
   } else if (mouseX > 110 && mouseX < 160 && mouseY > 175 && mouseY < 225 && vierkant4 == 0 && speler1 == false) {
 
     vierkant4 = 8
     speler1 = true
     speler2 = false
+    click.play()
   }
 
 
@@ -247,12 +278,14 @@ function mousePressed() {
     vierkant5 = 9
     speler1 = false
     speler2 = true
+    click.play()
 
   } else if (mouseX > 175 && mouseX < 225 && mouseY > 175 && mouseY < 225 && vierkant5 == 0 && speler1 == false) {
 
     vierkant5 = 10
     speler1 = true
     speler2 = false
+    click.play()
   }
 
 
@@ -262,12 +295,14 @@ function mousePressed() {
     vierkant6 = 11
     speler1 = false
     speler2 = true
+    click.play()
 
   } else if (mouseX > 240 && mouseX < 290 && mouseY > 175 && mouseY < 225 && vierkant6 == 0 && speler1 == false) {
 
     vierkant6 = 12
     speler1 = true
     speler2 = false
+    click.play()
   }
 
 
@@ -277,12 +312,14 @@ function mousePressed() {
     vierkant7 = 13
     speler1 = false
     speler2 = true
+    click.play()
 
   } else if (mouseX > 110 && mouseX < 160 && mouseY > 240 && mouseY < 290 && vierkant7 == 0 && speler1 == false) {
 
     vierkant7 = 14
     speler1 = true
     speler2 = false
+    click.play()
   }
 
 
@@ -292,12 +329,14 @@ function mousePressed() {
     vierkant8 = 15
     speler1 = false
     speler2 = true
+    click.play()
 
   } else if (mouseX > 175 && mouseX < 225 &&mouseY > 240 && mouseY < 290 && vierkant8 == 0 && speler1 == false) {
 
     vierkant8 = 16
     speler1 = true
     speler2 = false
+    click.play()
   }
 
 
@@ -307,12 +346,31 @@ function mousePressed() {
     vierkant9 = 17
     speler1 = false
     speler2 = true
+    click.play()
 
   } else if (mouseX > 240 && mouseX < 290 &&  mouseY > 240 && mouseY < 290 && vierkant9 == 0 && speler1 == false) {
 
     vierkant9 = 18
     speler1 = true
     speler2 = false
+    click.play()
+  }
+  if (mouseX > 250 && mouseX < 300 && mouseY > 50 && mouseY < 100 && (BlueWin == true || RedWin == true))
+  {
+   vierkant1 = 0
+    vierkant2 = 0
+    vierkant3 = 0
+    vierkant4 = 0
+    vierkant5 = 0
+    vierkant6 = 0
+    vierkant7 = 0
+    vierkant8 = 0
+    vierkant9 = 0
+    
+    speler1 = true
+    speler2 = false
+    RedWin = false
+    BlueWin = false 
   }
 }
 
@@ -332,5 +390,7 @@ function keyPressed() {
     
     speler1 = true
     speler2 = false
+    RedWin = false
+    BlueWin = false
   }
 }

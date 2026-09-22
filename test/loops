@@ -1,0 +1,62 @@
+// @ts-nocheck
+let vakje = 0;
+let vakjeGrootte = 30;
+let marginRight = 20;
+let marginTop = 20;
+let rows = 10;
+let columns = 10;
+
+let vakjes = []
+
+function setup() {
+    createCanvas(400, 400);
+    for (let x = 0; x < columns; x++) {
+        for (let y = 0; y < rows; y++) {
+            vakjes.push(0);
+        }
+    }
+}
+
+function draw() {
+    background("grey");
+
+    vakjes[0]
+    vakjes[1]
+
+    let vakjesCounter = 0;
+    for (let x = 0; x < columns; x++) {
+        for (let y = 0; y < rows; y++) {
+            vakjesCounter++;
+            let vakjeXPos = marginRight + x * (vakjeGrootte + 5);
+            let vakjeYPos = marginTop + y * (vakjeGrootte + 5);
+
+            if (vakjes[vakjesCounter] == 0){
+                fill("black")
+            }
+            else{
+                fill("blue")
+            }
+
+            rect(vakjeXPos, vakjeYPos, vakjeGrootte, vakjeGrootte);
+        }
+    }
+}
+
+function mousePressed(){
+    if (mouseButton == "left"){
+        let vakjesCounter = 0;
+
+        for (let x = 0; x < 10; x++) {
+            for (let y = 0; y < 10; y++) {
+                vakjesCounter++;
+                let vakjeXPos = marginRight + x * (vakjeGrootte + 5);
+                let vakjeYPos = marginTop + y * (vakjeGrootte + 5);
+                if (mouseX > vakjeXPos && mouseX < vakjeXPos + vakjeGrootte && 
+                    mouseY > vakjeYPos && mouseY < vakjeYPos + vakjeGrootte){
+                        vakjes[vakjesCounter] = 1
+                }
+            }
+        }
+    }
+
+}
