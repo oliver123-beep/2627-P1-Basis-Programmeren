@@ -16,7 +16,7 @@ let reset
 
 function preload() {
   click = loadSound("https://cdn.pixabay.com/audio/2025/01/20/audio_9afb73ceb5.mp3");
-  reset = loadImage("refresh-page-option.png");
+  //reset = loadImage("refresh-page-option.png");
 }
   function setup() {
   createCanvas(400, 400)
