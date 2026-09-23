@@ -177,7 +177,7 @@ function mousePressed(){
     if (mouseButton == "left"){
 // hoofd menu
         
-
+        //als je op de refresh knop klikt reset de game
         if (mouseX > 250 && mouseX < 300 && mouseY > 50 && mouseY < 100)
         {
         for (let i = 0; i < vakjes.length; i++) {
