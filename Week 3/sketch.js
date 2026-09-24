@@ -30,6 +30,7 @@ function preload() {
   click = loadSound("https://cdn.pixabay.com/audio/2025/01/20/audio_9afb73ceb5.mp3");
   reset = loadImage("refresh-page-option.png");
   play = loadImage("pngfind.com-video-play-button-png-471563.png")
+  menu = loadImage ("—Pngtree— vector icon_3791388.png")
 }
 
 function setup() {
@@ -81,6 +82,7 @@ function draw() {
         Draw = true;
      }
     }
+
 //achtergrond als je wint
  if (BlueWin == true) 
     {
@@ -172,16 +174,21 @@ function draw() {
     }
   }
     fill(255)
-   text("Klik enter om te reseten", 20, 300)
+    textSize(20)
+   text("Klik enter om te reseten ", 20, 300)
     // hoofdmenu
     if (Hoofdmenu == true){
     background("green")
-    text("click to play", 230, 170 )
+    text("click to play", 225, 150 )
     //textFont(StreetFont)
     textSize(38)
     text("Tic Tac Toe" ,100,220)
     
      image(play, 250, 50, 75,75)
+    
+    }
+    if (Hoofdmenu == false){
+    image(menu, 240, 100, 75,75);
     }
 
 
@@ -207,14 +214,21 @@ Hoofdmenu = false;
         BlueWin = false;
         RedWin = false;
         Draw = false;
-        Hoofdmenu = true;
+        Hoofdmenu = false;
   }
     }
+    // hoofdmenu 
+    if (Hoofdmenu == false){
+      if (mouseX > 240 && mouseX < 315 && mouseY > 100 && mouseY < 175){
+        Hoofdmenu = true;
+      }
+   }
+
         
             let vakjesCounter = 0;
     
-        for (let x = 0; x < 3; x++) {
-            for (let y = 0; y < 3; y++) {
+        for (let x = 0; x < rows; x++) {
+            for (let y = 0; y < columns; y++) {
                 
                 let vakjeXPos = marginRight + x * (vakjeGrootte + 5);
                 let vakjeYPos = marginTop + y * (vakjeGrootte + 5);
@@ -222,13 +236,16 @@ Hoofdmenu = false;
                 if (mouseX > vakjeXPos && mouseX < vakjeXPos + vakjeGrootte && 
                     mouseY > vakjeYPos && mouseY < vakjeYPos + vakjeGrootte){
                      
-                      if (beurt == 1 && vakjes[vakjesCounter] == 0 && RedWin == false && BlueWin == false) 
+                      if (beurt == 1 && vakjes[vakjesCounter] == 0 && RedWin == false && BlueWin == false &&
+                        Hoofdmenu == false
+                      ) 
                       {
                       vakjes[vakjesCounter] = 1
                       beurt++;
                       click.play();
                       }
-                      if (beurt == 2 && vakjes[vakjesCounter] == 0 && RedWin == false && BlueWin == false)
+                      if (beurt == 2 && vakjes[vakjesCounter] == 0 && RedWin == false && BlueWin == false &&
+                        Hoofdmenu == false)
                       {
                         vakjes[vakjesCounter] = 2
                         beurt++;
@@ -265,6 +282,6 @@ Hoofdmenu = false;
     BlueWin = false;
     RedWin = false;
     Draw = false;
-    Hoofdmenu = true;
+    Hoofdmenu = false;
   }
 }
