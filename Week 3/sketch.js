@@ -181,6 +181,16 @@ function draw() {
     if (Hoofdmenu == true){
     background("green")
     text("click to play", 225, 150 )
+   //2 player
+   rect(120,300,50,50)
+    //ai
+   rect(20,300,50,50)
+    fill(0)
+    text ("ai", 25, 330,)
+    //2 player
+    textSize(12)
+    text ("2 player", 125, 330,)
+
     textSize(38)
     text("Tic Tac Toe" ,100,220)
     
@@ -190,11 +200,7 @@ function draw() {
     if (Hoofdmenu == false){
     image(menu, 240, 100, 75,75);
     }
-    fill(255)
-  rect(..,..,20,20)
-  fill(0)
-  tekst (ai, .., ..,)
-
+    
 
 
 
@@ -204,11 +210,34 @@ function draw() {
 function mousePressed(){
     if (mouseButton == "left"){
       
-      
-    if (mousex< op de ai klikken){
-    ai = true;
-    (optioneel) Hoofdmenu = false;
+      // ai knop
+    if (mouseX > 20 && mouseX < 70 && mouseY > 300 && mouseY < 350){
+    AI = true;
+   Hoofdmenu = false;
+   for (let i = 0; i < vakjes.length; i++) {
+        vakjes[i] = 0;
     }
+
+    beurt = 1;
+    BlueWin = false;
+    RedWin = false;
+    Draw = false;
+    }
+    //2 player
+    if (mouseX > 120 && mouseX < 170 && mouseY > 300 && mouseY < 350){
+    AI = false;
+   Hoofdmenu = false;
+   for (let i = 0; i < vakjes.length; i++) {
+        vakjes[i] = 0;
+    }
+
+    beurt = 1;
+    BlueWin = false;
+    RedWin = false;
+    Draw = false;
+   
+    }
+  
 
 // hoofd menu 
 // play button
@@ -264,7 +293,7 @@ Hoofdmenu = false;
                         beurt++;
                         click.play();
                       }
-                      if (ai == true && beurt == 2) {
+                      if (AI == true && beurt == 2) {
 
                       let plek = floor(random(9));
 
@@ -276,7 +305,7 @@ Hoofdmenu = false;
 
                       beurt = 1;
                       click.play();
-}         
+                    }         
                   if (beurt > 2)
                   {
                     beurt = 1;
