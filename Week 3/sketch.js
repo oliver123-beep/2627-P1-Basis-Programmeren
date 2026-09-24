@@ -13,6 +13,7 @@ let RedWin = false;
 let BlueWin = false;
 let Draw = false; 
 let Hoofdmenu = true; 
+let AI = false; 
 let win = [
     [0, 1, 2],
     [3, 4, 5],
@@ -180,7 +181,6 @@ function draw() {
     if (Hoofdmenu == true){
     background("green")
     text("click to play", 225, 150 )
-    //textFont(StreetFont)
     textSize(38)
     text("Tic Tac Toe" ,100,220)
     
@@ -190,6 +190,12 @@ function draw() {
     if (Hoofdmenu == false){
     image(menu, 240, 100, 75,75);
     }
+    fill(255)
+  rect(..,..,20,20)
+  fill(0)
+  tekst (ai, .., ..,)
+
+
 
 
 }
@@ -197,7 +203,15 @@ function draw() {
 
 function mousePressed(){
     if (mouseButton == "left"){
-// hoofd menu
+      
+      
+    if (mousex< op de ai klikken){
+    ai = true;
+    (optioneel) Hoofdmenu = false;
+    }
+
+// hoofd menu 
+// play button
  if (mouseX > 250 && mouseX < 325 && mouseY > 50 && mouseY < 125){
 Hoofdmenu = false;
 }
@@ -237,8 +251,7 @@ Hoofdmenu = false;
                     mouseY > vakjeYPos && mouseY < vakjeYPos + vakjeGrootte){
                      
                       if (beurt == 1 && vakjes[vakjesCounter] == 0 && RedWin == false && BlueWin == false &&
-                        Hoofdmenu == false
-                      ) 
+                        Hoofdmenu == false) 
                       {
                       vakjes[vakjesCounter] = 1
                       beurt++;
@@ -251,11 +264,19 @@ Hoofdmenu = false;
                         beurt++;
                         click.play();
                       }
-                  
-                     
+                      if (ai == true && beurt == 2) {
 
-                     
-                  
+                      let plek = floor(random(9));
+
+                      while (vakjes[plek] != 0) {
+                      plek = floor(random(9));
+                      }
+
+                      vakjes[plek] = 2;
+
+                      beurt = 1;
+                      click.play();
+}         
                   if (beurt > 2)
                   {
                     beurt = 1;
