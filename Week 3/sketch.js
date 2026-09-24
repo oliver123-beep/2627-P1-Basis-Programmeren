@@ -1,396 +1,270 @@
-let vierkant1 = 0
-let vierkant2 = 0
-let vierkant3 = 0
-let vierkant4 = 0
-let vierkant5 = 0
-let vierkant6 = 0
-let vierkant7 = 0
-let vierkant8 = 0
-let vierkant9 = 0
-let RedWin = false
-let BlueWin = false
-let speler1 = true
-let speler2 = false
-let click 
-let reset
+// @ts-nocheck
+let vakje = 0;
+let vakjeGrootte = 70;
+let marginRight = 20;
+let marginTop = 20;
+let rows = 3;
+let columns = 3;
+let speler1 = true;
+let speler2 = false;
+let beurt = 1;
+let vakjeskleur
+let RedWin = false; 
+let BlueWin = false;
+let Draw = false; 
+let Hoofdmenu = true; 
+let win = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+];
+
+let vakjes = []
 
 function preload() {
   click = loadSound("https://cdn.pixabay.com/audio/2025/01/20/audio_9afb73ceb5.mp3");
-  //reset = loadImage("refresh-page-option.png");
-}
-  function setup() {
-  createCanvas(400, 400)
-  
+  reset = loadImage("refresh-page-option.png");
+  play = loadImage("pngfind.com-video-play-button-png-471563.png")
 }
 
+function setup() {
+    createCanvas(400, 400);
+    for (let x = 0; x < columns; x++) {
+        for (let y = 0; y < rows; y++) {
+            vakjes.push(0);
+        }
+    }
+}
 
 function draw() {
-  // kleur voor wie aan de beurt is
-  if (speler1 == true )
-  { 
-    background(255, 0, 0)
-  }else if (speler2 == true)
-  {
-    background(0, 0, 255)
-  }
-  //kleur voor wie er gewonen heeft
-  if (RedWin == true)
-  { 
-   background(255,0,0)
-  }
-  else if (BlueWin == true)
-  {
-    background(0,0,255)
-  }
+    
+    background("grey");
+    
 
-  // Groot bord
-  fill(0)
-  rect(100, 100, 200, 200, 10)
+    
 
+    vakjes[0]
+    vakjes[1]
+    vakjes[2]
+    
 
-  // VAKJE 1
-  fill(255)
-  if (RedWin == false && BlueWin == false)
-  {
-  if (mouseX > 110 && mouseX < 160 && mouseY > 110 && mouseY < 160){
-    fill(200)
-  }
-  if (vierkant1 == 1) {
-    fill(255, 0, 0)
-  } else if (vierkant1 == 2) {
-    fill(0, 0, 255)
-  }
-  }
-  rect(110, 110, 50, 50, 10)
+    // check wie wint door te kijken of ze blauw of rood zijn en in de volgorde van "win"
+    for (let i = 0; i < win.length; i++) {
 
+    if (vakjes[win[i][0]] == 1 &&
+        vakjes[win[i][1]] == 1 &&
+        vakjes[win[i][2]] == 1) {
 
-  // VAKJE 2
-  fill(255)
-  if (mouseX > 175 && mouseX < 225 && mouseY > 110 && mouseY < 160){
-    fill(200)
-  }
-  if (vierkant2 == 3) {
-    fill(255, 0, 0)
-  } else if (vierkant2 == 4) {
-    fill(0, 0, 255)
-  }
-  rect(175, 110, 50, 50, 10)
+        BlueWin = true;
+    } 
+    if (vakjes[win[i][0]] == 2 &&
+        vakjes[win[i][1]] == 2 &&
+        vakjes[win[i][2]] == 2) {
 
+        RedWin = true;
+    }
+    //gelijkspel als blauw of rood nog niet gewonnen heeft en als alle vakjes vol zitten 
+    if (BlueWin == false && RedWin == false) {
 
-  // VAKJE 3
-  fill(255)
-  if (mouseX > 240 && mouseX < 290 && mouseY > 110 && mouseY < 160){
-    fill(200)
-  }
-  if (vierkant3 == 5) {
-    fill(255, 0, 0)
-  } else if (vierkant3 == 6) {
-    fill(0, 0, 255)
-  }
-  rect(240, 110, 50, 50, 10)
- 
-
-  // VAKJE 4
-  fill(255)
-  if (mouseX > 110 && mouseX < 160 && mouseY > 175 && mouseY < 225){
-    fill(200)
-  }
-  if (vierkant4 == 7) {
-    fill(255, 0, 0)
-  } else if (vierkant4 == 8) {
-    fill(0, 0, 255)
-  }
-  rect(110, 175, 50, 50, 10)
-
-
-  // VAKJE 5
-  fill(255)
-  if (mouseX > 175 && mouseX < 225 && mouseY > 175 && mouseY < 225){
-    fill(200)
-  }
-  if (vierkant5 == 9) {
-    fill(255, 0, 0)
-  } else if (vierkant5 == 10) {
-    fill(0, 0, 255)
-  }
-  rect(175, 175, 50, 50, 10)
-
-
-  // VAKJE 6
-  fill(255)
-  if (mouseX > 240 && mouseX < 290 && mouseY > 175 && mouseY < 225){
-    fill(200)
-  }
-  if (vierkant6 == 11) {
-    fill(255, 0, 0)
-  } else if (vierkant6 == 12) {
-    fill(0, 0, 255)
-  }
-  rect(240, 175, 50, 50, 10)
-
-
-  // VAKJE 7
-  fill(255)
-  if (mouseX > 110 && mouseX < 160 && mouseY > 240 && mouseY < 290){
-    fill(200)
-  }
-  if (vierkant7 == 13) {
-    fill(255, 0, 0)
-  } else if (vierkant7 == 14) {
-    fill(0, 0, 255)
-  }
-  rect(110, 240, 50, 50, 10)
-
-
-  // VAKJE 8
-  fill(255)
-  if (mouseX > 175 && mouseX < 225 && mouseY > 240 && mouseY < 290){
-    fill(200)
-  }
-  if (vierkant8 == 15) {
-    fill(255, 0, 0)
-  } else if (vierkant8 == 16) {
-    fill(0, 0, 255)
-  }
-  rect(175, 240, 50, 50, 10)
-
-
-  // VAKJE 9
-  fill(255)
-  if (mouseX > 240 && mouseX < 290 && mouseY > 240 && mouseY < 290){
-    fill(200)
-  }
-  if (vierkant9 == 17) {
-    fill(255, 0, 0)
-  } else if (vierkant9 == 18) {
-    fill(0, 0, 255)
-  }
-  rect(240, 240, 50, 50, 10)
-//red wins
-  if ((vierkant1 == 1 && vierkant2 == 3 && vierkant3 == 5)||(vierkant1 == 1 && vierkant4 == 7 && vierkant7 == 13)||(vierkant1 == 1 && vierkant5 == 9 && vierkant9 == 17)||(vierkant2 == 3 && vierkant5 == 9 && vierkant8 == 15)||(vierkant3 == 5 && vierkant6 == 11 && vierkant9 == 17)||(vierkant4 == 7 && vierkant5 == 9 && vierkant6 == 11)||(vierkant7 == 13 && vierkant8 == 15 && vierkant9 == 17)||(vierkant3 == 5 && vierkant5 == 9 && vierkant7 == 13))
-    if (BlueWin == false)
- {
-    fill(0)
-    textSize(32)
-    text("red wins",100,90)
-    RedWin = true
-    image(reset, 250,50, 50,50)
-  }
- //blue wins
-  if ((vierkant1 == 2 && vierkant2 == 4 && vierkant3 == 6)||(vierkant1 == 2 && vierkant4 == 8 && vierkant7 == 14)||(vierkant1 == 2 && vierkant5 == 10 && vierkant9 == 18)||(vierkant2 == 4 && vierkant5 == 10 && vierkant8 == 16)||(vierkant3 == 6 && vierkant6 == 12 && vierkant9 == 18)||(vierkant4 == 8 && vierkant5 == 10 && vierkant6 == 12)||(vierkant7 == 14 && vierkant8 == 16 && vierkant9 == 18)||(vierkant3 == 6 && vierkant5 == 10 && vierkant7 == 14))
-    if (RedWin == false) 
+        let vol = true;
+        for (let i = 0; i < vakjes.length; i++) { 
+        if (vakjes[i] == 0) { 
+            vol = false; 
+        }
+    }
+    if (vol == true) { 
+        Draw = true;
+     }
+    }
+//achtergrond als je wint
+ if (BlueWin == true) 
     {
-    fill(0)
-    textSize(32)
-    text("blue wins",100,90)
-    BlueWin = true
-    image(reset, 250,50, 50,50)
+        background(0,0,255);
+        fill(255)
+        textSize(32)   
+        text("Blauw wint!", 20, 350);
+        image(reset, 250,50, 50,50) ;
+        
+    } else if (RedWin == true)
+     { 
+        background(255,0,0);
+        fill(0)
+        textSize(32)
+        text("Rood wint!", 20, 350);
+        image(reset, 250,50, 50,50);
+        
+     } else if ( Draw == true)
+    {
+        background("grey")
+        fill(255)
+        textSize(32)   
+        text("Gelijkspel!", 20, 350);
+        image(reset, 250,50, 50,50) ;
+     }
+     //laten zien wie aan de beurt is
+     else if (beurt == 1) 
+    {
+        background(0, 0, 200); 
+        fill(255)
+        textSize(25)
+       text("Blauw is aan de beurt", 20, 350);
+      
+    }
+     else  { 
+        background(200, 0, 0);
+        fill(255)
+        textSize(25)
+        text("Rood is aan de beurt", 20, 350); 
+        
+    }
+ }
+   
+   // vakjes maken
+    let vakjesCounter = 0;
+    for (let x = 0; x < columns; x++) {
+        for (let y = 0; y < rows; y++) {
+            
+            let vakjeXPos = marginRight + x * (vakjeGrootte + 5);
+            let vakjeYPos = marginTop + y * (vakjeGrootte + 5);
 
+            //vakjes kleuren
+
+            if (vakjes[vakjesCounter] == 0){
+                fill("white")
+            }
+           if (vakjes[vakjesCounter] == 1 ) {
+              fill("blue")
+                
+            }
+            if (vakjes[vakjesCounter] == 2){
+              fill("red")
+            }
+            //vakjes hover
+            if (mouseX > vakjeXPos && mouseX < vakjeXPos + vakjeGrootte && 
+                mouseY > vakjeYPos && mouseY < vakjeYPos + vakjeGrootte &&
+            vakjes[vakjesCounter] == 0) {
+                fill("grey")
+            }
+            strokeWeight(2);
+ // duidelijk maken wie er gewonen heeft door de winnende vakjes te vinden en dan de strokeWeight groter te maken
+ if ( Hoofdmenu == false) {
+ for (let i = 0; i < win.length; i++) {
+    if (vakjes[win[i][0]] != 0 &&
+        vakjes[win[i][0]] == vakjes[win[i][1]] &&
+        vakjes[win[i][1]] == vakjes[win[i][2]]) {
+
+        if (vakjesCounter == win[i][0] ||
+            vakjesCounter == win[i][1] ||
+            vakjesCounter == win[i][2]) {
+            
+            strokeWeight(5);
+        }
+    }
+}       //de vakjes
+            rect(vakjeXPos, vakjeYPos, vakjeGrootte, vakjeGrootte,5);
+            vakjesCounter++;
+        }
+    }
   }
-  
-  fill(0)
-  textSize(20)
-  text("press enter to reset",100,350)
-
-
-  
-}
-
-
-// true = speler is aan de beurt
-// speler 1 = rood
-// speler 2 = blauw
-//oneven getallen zijn rood 
-//even gettalen zijn blauw
-
-function mousePressed() {
-
-  // VAKJE 1
-  if (mouseX > 110 && mouseX < 160 && mouseY > 110 && mouseY < 160 && vierkant1 == 0 && speler1 == true) {
-
-    vierkant1 = 1
-    speler1 = false
-    speler2 = true
-    click.play();
-
-  } else if (mouseX > 110 && mouseX < 160 && mouseY > 110 && mouseY < 160 && vierkant1 == 0 && speler1 == false) {
-
-    vierkant1 = 2
-    speler1 = true
-    speler2 = false
-    click.play();
-  }
-
-
-  // VAKJE 2
-  if (mouseX > 175 && mouseX < 225 && mouseY > 110 && mouseY < 160 && vierkant2 == 0 && speler1 == true) {
-
-    vierkant2 = 3
-    speler1 = false
-    speler2 = true
-    click.play() 
-
-  } else if (mouseX > 175 && mouseX < 225 && mouseY > 110 && mouseY < 160 && vierkant2 == 0 && speler1 == false) {
-
-    vierkant2 = 4
-    speler1 = true
-    speler2 = false
-    click.play()
-  }
-
-
-  // VAKJE 3
-  if (mouseX > 240 && mouseX < 290 && mouseY > 110 && mouseY < 160 && vierkant3 == 0 && speler1 == true) {
-
-    vierkant3 = 5
-    speler1 = false
-    speler2 = true
-    click.play()
-  } else if (mouseX > 240 && mouseX < 290 && mouseY > 110 && mouseY < 160 && vierkant3 == 0 && speler1 == false) {
-
-    vierkant3 = 6
-    speler1 = true
-    speler2 = false
-    click.play()
-  }
-
-
-  // VAKJE 4
-  if (mouseX > 110 && mouseX < 160 && mouseY > 175 && mouseY < 225 && vierkant4 == 0 && speler1 == true) {
-
-    vierkant4 = 7
-    speler1 = false
-    speler2 = true
-    click.play()
-
-  } else if (mouseX > 110 && mouseX < 160 && mouseY > 175 && mouseY < 225 && vierkant4 == 0 && speler1 == false) {
-
-    vierkant4 = 8
-    speler1 = true
-    speler2 = false
-    click.play()
-  }
-
-
-  // VAKJE 5
-  if (mouseX > 175 && mouseX < 225 && mouseY > 175 && mouseY < 225 && vierkant5 == 0 && speler1 == true) {
-
-    vierkant5 = 9
-    speler1 = false
-    speler2 = true
-    click.play()
-
-  } else if (mouseX > 175 && mouseX < 225 && mouseY > 175 && mouseY < 225 && vierkant5 == 0 && speler1 == false) {
-
-    vierkant5 = 10
-    speler1 = true
-    speler2 = false
-    click.play()
-  }
-
-
-  // VAKJE 6
-  if (mouseX > 240 && mouseX < 290 && mouseY > 175 && mouseY < 225 && vierkant6 == 0 && speler1 == true) {
-
-    vierkant6 = 11
-    speler1 = false
-    speler2 = true
-    click.play()
-
-  } else if (mouseX > 240 && mouseX < 290 && mouseY > 175 && mouseY < 225 && vierkant6 == 0 && speler1 == false) {
-
-    vierkant6 = 12
-    speler1 = true
-    speler2 = false
-    click.play()
-  }
-
-
-  // VAKJE 7
-  if (mouseX > 110 && mouseX < 160 && mouseY > 240 && mouseY < 290 && vierkant7 == 0 && speler1 == true) {
-
-    vierkant7 = 13
-    speler1 = false
-    speler2 = true
-    click.play()
-
-  } else if (mouseX > 110 && mouseX < 160 && mouseY > 240 && mouseY < 290 && vierkant7 == 0 && speler1 == false) {
-
-    vierkant7 = 14
-    speler1 = true
-    speler2 = false
-    click.play()
-  }
-
-
-  // VAKJE 8
-  if (mouseX > 175 && mouseX < 225 && mouseY > 240 && mouseY < 290 && vierkant8 == 0 && speler1 == true) {
-
-    vierkant8 = 15
-    speler1 = false
-    speler2 = true
-    click.play()
-
-  } else if (mouseX > 175 && mouseX < 225 &&mouseY > 240 && mouseY < 290 && vierkant8 == 0 && speler1 == false) {
-
-    vierkant8 = 16
-    speler1 = true
-    speler2 = false
-    click.play()
-  }
-
-
-  // VAKJE 9
-  if (mouseX > 240 && mouseX < 290 && mouseY > 240 && mouseY < 290 && vierkant9 == 0 && speler1 == true) {
-
-    vierkant9 = 17
-    speler1 = false
-    speler2 = true
-    click.play()
-
-  } else if (mouseX > 240 && mouseX < 290 &&  mouseY > 240 && mouseY < 290 && vierkant9 == 0 && speler1 == false) {
-
-    vierkant9 = 18
-    speler1 = true
-    speler2 = false
-    click.play()
-  }
-  if (mouseX > 250 && mouseX < 300 && mouseY > 50 && mouseY < 100 && (BlueWin == true || RedWin == true))
-  {
-   vierkant1 = 0
-    vierkant2 = 0
-    vierkant3 = 0
-    vierkant4 = 0
-    vierkant5 = 0
-    vierkant6 = 0
-    vierkant7 = 0
-    vierkant8 = 0
-    vierkant9 = 0
+    fill(255)
+   text("Klik enter om te reseten", 20, 300)
+    // hoofdmenu
+    if (Hoofdmenu == true){
+    background("green")
+    text("click to play", 230, 170 )
+    //textFont(StreetFont)
+    textSize(38)
+    text("Tic Tac Toe" ,100,220)
     
-    speler1 = true
-    speler2 = false
-    RedWin = false
-    BlueWin = false 
-  }
+     image(play, 250, 50, 75,75)
+    }
+
+
 }
 
 
-function keyPressed() {
+function mousePressed(){
+    if (mouseButton == "left"){
+// hoofd menu
+ if (mouseX > 250 && mouseX < 325 && mouseY > 50 && mouseY < 125){
+Hoofdmenu = false;
+}
+   
+        
+        //als je op de refresh knop klikt reset de game
+        if ( RedWin == true || BlueWin == true || Draw == true && Hoofdmenu == false ){
+        if (mouseX > 250 && mouseX < 300 && mouseY > 50 && mouseY < 100)
+        {
+        for (let i = 0; i < vakjes.length; i++) {
+        vakjes[i] = 0;
+    }
+        beurt = 1;
+        BlueWin = false;
+        RedWin = false;
+        Draw = false;
+        Hoofdmenu = true;
+  }
+    }
+        
+            let vakjesCounter = 0;
+    
+        for (let x = 0; x < 3; x++) {
+            for (let y = 0; y < 3; y++) {
+                
+                let vakjeXPos = marginRight + x * (vakjeGrootte + 5);
+                let vakjeYPos = marginTop + y * (vakjeGrootte + 5);
+                // als je op de vakjes klikt start de code
+                if (mouseX > vakjeXPos && mouseX < vakjeXPos + vakjeGrootte && 
+                    mouseY > vakjeYPos && mouseY < vakjeYPos + vakjeGrootte){
+                     
+                      if (beurt == 1 && vakjes[vakjesCounter] == 0 && RedWin == false && BlueWin == false) 
+                      {
+                      vakjes[vakjesCounter] = 1
+                      beurt++;
+                      click.play();
+                      }
+                      if (beurt == 2 && vakjes[vakjesCounter] == 0 && RedWin == false && BlueWin == false)
+                      {
+                        vakjes[vakjesCounter] = 2
+                        beurt++;
+                        click.play();
+                      }
+                  
+                     
 
+                     
+                  
+                  if (beurt > 2)
+                  {
+                    beurt = 1;
+                  }
+                  }
+                  vakjesCounter++;    
+                }
+                 
+                
+                
+              
+            }
+        }
+        
+    }
+    //reset bij enter
+    function keyPressed(){
   if (keyCode == ENTER) {
-    vierkant1 = 0
-    vierkant2 = 0
-    vierkant3 = 0
-    vierkant4 = 0
-    vierkant5 = 0
-    vierkant6 = 0
-    vierkant7 = 0
-    vierkant8 = 0
-    vierkant9 = 0
-    
-    speler1 = true
-    speler2 = false
-    RedWin = false
-    BlueWin = false
+   for (let i = 0; i < vakjes.length; i++) {
+        vakjes[i] = 0;
+    }
+
+    beurt = 1;
+    BlueWin = false;
+    RedWin = false;
+    Draw = false;
+    Hoofdmenu = true;
   }
 }
