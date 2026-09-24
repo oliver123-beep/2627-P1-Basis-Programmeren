@@ -14,6 +14,7 @@ let BlueWin = false;
 let Draw = false; 
 let Hoofdmenu = true; 
 let AI = false; 
+let Counter = 0;
 let win = [
     [0, 1, 2],
     [3, 4, 5],
@@ -200,9 +201,10 @@ function draw() {
     if (Hoofdmenu == false){
     image(menu, 240, 100, 75,75);
     }
-    
+    fill(0)
+    text( Counter ,200,200)
 
-
+ 
 
 }
 
@@ -284,6 +286,7 @@ Hoofdmenu = false;
                       {
                       vakjes[vakjesCounter] = 1
                       beurt++;
+                      Counter++;
                       click.play();
                       }
                       if (beurt == 2 && vakjes[vakjesCounter] == 0 && RedWin == false && BlueWin == false &&
@@ -291,9 +294,10 @@ Hoofdmenu = false;
                       {
                         vakjes[vakjesCounter] = 2
                         beurt++;
+                        //Counter++;
                         click.play();
                       }
-                      if (AI == true && beurt == 2) {
+                      if (AI == true && beurt == 2 && Counter < 9 ) {
 
                       let plek = floor(random(9));
 
@@ -304,6 +308,7 @@ Hoofdmenu = false;
                       vakjes[plek] = 2;
 
                       beurt = 1;
+                      Counter++;
                       click.play();
                     }         
                   if (beurt > 2)
