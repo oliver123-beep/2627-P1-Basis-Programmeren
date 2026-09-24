@@ -202,7 +202,7 @@ function draw() {
     image(menu, 240, 100, 75,75);
     }
     fill(0)
-    text( Counter ,200,200)
+    
 
  
 
