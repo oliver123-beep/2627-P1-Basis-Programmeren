@@ -298,6 +298,10 @@ for (let i = 0; i < vakjes.length; i++) {
                       beurt++;
                       Counter++;
                       click.play();
+                      checkWin();
+                        if (BlueWin == true) {
+                         return;
+                    }
                       }
                       if (beurt == 2 && vakjes[vakjesCounter] == 0 && RedWin == false && BlueWin == false &&
                         Hoofdmenu == false)
@@ -320,6 +324,8 @@ for (let i = 0; i < vakjes.length; i++) {
                       beurt = 1;
                       Counter++;
                       click.play();
+
+                      checkWin();
                     }         
                   if (beurt > 2)
                   {
@@ -349,5 +355,22 @@ for (let i = 0; i < vakjes.length; i++) {
     Draw = false;
     Hoofdmenu = false;
     Counter = 0; 
+  }
+}
+function checkWin() {
+  for (let i = 0; i < win.length; i++) {
+
+    if (vakjes[win[i][0]] != 0 &&
+        vakjes[win[i][0]] == vakjes[win[i][1]] &&
+        vakjes[win[i][1]] == vakjes[win[i][2]]) {
+
+      if (vakjes[win[i][0]] == 1) {
+        BlueWin = true;
+      }
+
+      if (vakjes[win[i][0]] == 2) {
+        RedWin = true;
+      }
+    }
   }
 }
