@@ -33,6 +33,9 @@ function preload() {
   reset = loadImage("refresh-page-option.png");
   play = loadImage("pngfind.com-video-play-button-png-471563.png")
   menu = loadImage ("—Pngtree— vector icon_3791388.png")
+  font = loadFont ("Super Waffles.ttf")
+  aiImage = loadImage ("AI-Robot-Illustrated-SVG-Icon.svg")
+  Player = loadImage ("team.svg")
 }
 
 function setup() {
@@ -182,18 +185,17 @@ function draw() {
     if (Hoofdmenu == true){
     background("green")
     text("click to play", 225, 150 )
-   //2 player
-   rect(120,300,50,50)
     //ai
-   rect(20,300,50,50)
-    fill(0)
-    text ("ai", 25, 330,)
+    image(aiImage,0,250,150,150)
     //2 player
+    image(Player, 120, 300, 75, 75)
     textSize(12)
-    text ("2 player", 125, 330,)
+    text ("2 player", 130, 300,)
+    text("ai", 90, 290 )
 
-    textSize(38)
-    text("Tic Tac Toe" ,100,220)
+    textSize(50)
+    textFont(font)
+    text("Tic Tac Toe" ,70,220)
     
      image(play, 250, 50, 75,75)
     
@@ -212,8 +214,8 @@ function draw() {
 function mousePressed(){
     if (mouseButton == "left"){
       
-      // ai knop
-    if (mouseX > 20 && mouseX < 70 && mouseY > 300 && mouseY < 350){
+      // ai knop ( de image is raar dus de afmetingen zijn zelf gemeten)
+    if (mouseX > 40 && mouseX < 105 && mouseY > 290 && mouseY < 365){
     AI = true;
    Hoofdmenu = false;
    for (let i = 0; i < vakjes.length; i++) {
@@ -224,9 +226,10 @@ function mousePressed(){
     BlueWin = false;
     RedWin = false;
     Draw = false;
+    Counter = 0;
     }
     //2 player
-    if (mouseX > 120 && mouseX < 170 && mouseY > 300 && mouseY < 350){
+    if (mouseX > 120 && mouseX < 195 && mouseY > 300 && mouseY < 375){
     AI = false;
    Hoofdmenu = false;
    for (let i = 0; i < vakjes.length; i++) {
@@ -237,6 +240,7 @@ function mousePressed(){
     BlueWin = false;
     RedWin = false;
     Draw = false;
+    Counter = 0;
    
     }
   
@@ -244,7 +248,12 @@ function mousePressed(){
 // hoofd menu 
 // play button
  if (mouseX > 250 && mouseX < 325 && mouseY > 50 && mouseY < 125){
-Hoofdmenu = false;
+for (let i = 0; i < vakjes.length; i++) {
+        vakjes[i] = 0;
+    }
+        beurt = 1;
+        Counter = 0;
+        Hoofdmenu = false;
 }
    
         
@@ -260,6 +269,7 @@ Hoofdmenu = false;
         RedWin = false;
         Draw = false;
         Hoofdmenu = false;
+        Counter = 0;
   }
     }
     // hoofdmenu 
@@ -294,10 +304,10 @@ Hoofdmenu = false;
                       {
                         vakjes[vakjesCounter] = 2
                         beurt++;
-                        //Counter++;
+                        Counter++;
                         click.play();
                       }
-                      if (AI == true && beurt == 2 && Counter < 9 ) {
+                      if (AI == true && beurt == 2 && Counter < 9 && RedWin == false && BlueWin == false && Draw == false) {
 
                       let plek = floor(random(9));
 
@@ -338,5 +348,6 @@ Hoofdmenu = false;
     RedWin = false;
     Draw = false;
     Hoofdmenu = false;
+    Counter = 0; 
   }
 }
