@@ -1,247 +1,158 @@
-// @ts-nocheck
-let vakje = 0;
-let vakjeGrootte = 70;
-let marginRight = 20;
-let marginTop = 20;
-let rows = 3;
-let columns = 3;
-let speler1 = true;
-let speler2 = false;
-let beurt = 1;
-let vakjeskleur
-let RedWin = false; 
-let BlueWin = false;
-let Draw = false; 
-let win = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6]
-];
-
-let vakjes = []
-
-function preload() {
-  click = loadSound("https://cdn.pixabay.com/audio/2025/01/20/audio_9afb73ceb5.mp3");
-  reset = loadImage("refresh-page-option.png");
-}
+/*
+By Okazz
+*/ 
+let colors = ['#fdfffc', '#235789', '#c1292e', '#f1d302', '#020100'];
+let ctx;
+let circles = [];
+let motions = [];
+let noiseFilter;
 
 function setup() {
-    createCanvas(400, 400);
-    for (let x = 0; x < columns; x++) {
-        for (let y = 0; y < rows; y++) {
-            vakjes.push(0);
-        }
-    }
+	createCanvas(900, 900);
+	rectMode(CENTER);
+	ctx = drawingContext;
+	for (let i = 0; i < 10000; i++) {
+		let d = width * random(0.05, 0.15);
+		let x = (width/2) + (random(-0.35, 0.35) * (width - d/2));
+		let y = (height/2) + (random(-0.35, 0.35) * (height - d/2));
+		let newShape = { x: x, y: y, d: d };
+		let overlap = false;
+		for (let c of circles) {
+			if (checkCircleCollision(newShape, c)) {
+				overlap = true;
+				break;
+			}
+		}
+		if (!overlap) {
+			circles.push({x:x, y:y, d:d});
+		}
+	}
+	for(let c of circles){
+		motions.push(new Motion(c.x, c.y, c.d));
+	}
+
+	noiseFilter = createImage(width, height);
+	noiseFilter.loadPixels();
+	let pix = noiseFilter.width * noiseFilter.height * 4;
+	for (let i = 0; i < pix; i += 4) {
+		let x = (i / 4) % noiseFilter.width;
+		let y = floor(map(i, 0, pix, 0, noiseFilter.height));
+		let alph = random(30);
+		let c = noise(y * 0.08, x * 0.08) * 240;
+		noiseFilter.pixels[i] = c;
+		noiseFilter.pixels[i + 1] = c;
+		noiseFilter.pixels[i + 2] = c;
+		noiseFilter.pixels[i + 3] = alph;
+	}
+	noiseFilter.updatePixels();
 }
 
 function draw() {
-    
-    background("grey");
-    
-
-    
-
-    vakjes[0]
-    vakjes[1]
-    vakjes[2]
-    
-
-    // check wie wint door te kijken of ze blauw of rood zijn en in de volgorde van "win"
-    for (let i = 0; i < win.length; i++) {
-
-    if (vakjes[win[i][0]] == 1 &&
-        vakjes[win[i][1]] == 1 &&
-        vakjes[win[i][2]] == 1) {
-
-        BlueWin = true;
-    } 
-    if (vakjes[win[i][0]] == 2 &&
-        vakjes[win[i][1]] == 2 &&
-        vakjes[win[i][2]] == 2) {
-
-        RedWin = true;
-    }
-    //gelijkspel als blauw of rood nog niet gewonnen heeft en als alle vakjes vol zitten 
-    if (BlueWin == false && RedWin == false) {
-
-        let vol = true;
-        for (let i = 0; i < vakjes.length; i++) { 
-        if (vakjes[i] == 0) { 
-            vol = false; 
-        }
-    }
-    if (vol == true) { 
-        Draw = true;
-     }
-    }
-//achtergrond als je wint
- if (BlueWin == true) 
-    {
-        background(0,0,255);
-        fill(255)
-        textSize(32)   
-        text("Blauw wint!", 20, 350);
-        image(reset, 250,50, 50,50) ;
-        
-    } else if (RedWin == true)
-     { 
-        background(255,0,0);
-        fill(0)
-        textSize(32)
-        text("Rood wint!", 20, 350);
-        image(reset, 250,50, 50,50);
-        
-     } else if ( Draw == true)
-    {
-        background("grey")
-        fill(255)
-        textSize(32)   
-        text("Gelijkspel!", 20, 350);
-        image(reset, 250,50, 50,50) ;
-     }
-     //laten zien wie aan de beurt is
-     else if (beurt == 1) 
-    {
-        background(0, 0, 200); 
-        fill(255)
-        textSize(25)
-       text("Blauw is aan de beurt", 20, 350);
-      
-    }
-     else  { 
-        background(200, 0, 0);
-        fill(255)
-        textSize(25)
-        text("Rood is aan de beurt", 20, 350); 
-        
-    }
- }
-   
-   // vakjes maken
-    let vakjesCounter = 0;
-    for (let x = 0; x < columns; x++) {
-        for (let y = 0; y < rows; y++) {
-            
-            let vakjeXPos = marginRight + x * (vakjeGrootte + 5);
-            let vakjeYPos = marginTop + y * (vakjeGrootte + 5);
-
-            //vakjes kleuren
-
-            if (vakjes[vakjesCounter] == 0){
-                fill("white")
-            }
-           if (vakjes[vakjesCounter] == 1 ) {
-              fill("blue")
-                
-            }
-            if (vakjes[vakjesCounter] == 2){
-              fill("red")
-            }
-            //vakjes hover
-            if (mouseX > vakjeXPos && mouseX < vakjeXPos + vakjeGrootte && 
-                mouseY > vakjeYPos && mouseY < vakjeYPos + vakjeGrootte &&
-            vakjes[vakjesCounter] == 0) {
-                fill("grey")
-            }
-            strokeWeight(2);
- // duidelijk maken wie er gewonen heeft door de winnende vakjes te vinden en dan de strokeWeight groter te maken
-   for (let i = 0; i < win.length; i++) {
-    if (vakjes[win[i][0]] != 0 &&
-        vakjes[win[i][0]] == vakjes[win[i][1]] &&
-        vakjes[win[i][1]] == vakjes[win[i][2]]) {
-
-        if (vakjesCounter == win[i][0] ||
-            vakjesCounter == win[i][1] ||
-            vakjesCounter == win[i][2]) {
-            
-            strokeWeight(5);
-        }
-    }
-}       //de vakjes
-            rect(vakjeXPos, vakjeYPos, vakjeGrootte, vakjeGrootte,5);
-            vakjesCounter++;
-        }
-    }
-    fill(255)
-   text("Klik enter om te reseten", 20, 300)
-    
+	background(255);
+		for(let m of motions){
+			m.show();
+			m.move();
+		}
+	image(noiseFilter, 0, 0);
 }
 
+function checkCircleCollision(a, b) {
+	let distSq = (a.x - b.x) ** 2 + (a.y - b.y) ** 2;
+	let radiusSum = (a.d / 2) + (b.d / 2);
+	return distSq < radiusSum ** 2;
+}
 
-function mousePressed(){
-    if (mouseButton == "left"){
-// hoofd menu
-        
-        //als je op de refresh knop klikt reset de game
-        if (mouseX > 250 && mouseX < 300 && mouseY > 50 && mouseY < 100)
-        {
-        for (let i = 0; i < vakjes.length; i++) {
-        vakjes[i] = 0;
-    }
-        beurt = 1;
-        BlueWin = false;
-        RedWin = false;
-        Draw = false;
-    }
-        
-            let vakjesCounter = 0;
+function easeOutCirc(x) {
+	return sqrt(1 - Math.pow(x - 1, 2));
+}
 
-        for (let x = 0; x < 3; x++) {
-            for (let y = 0; y < 3; y++) {
-                
-                let vakjeXPos = marginRight + x * (vakjeGrootte + 5);
-                let vakjeYPos = marginTop + y * (vakjeGrootte + 5);
-                // als je op de vakjes klikt start de code
-                if (mouseX > vakjeXPos && mouseX < vakjeXPos + vakjeGrootte && 
-                    mouseY > vakjeYPos && mouseY < vakjeYPos + vakjeGrootte ){
-                     
-                      if (beurt == 1 && vakjes[vakjesCounter] == 0 && RedWin == false && BlueWin == false) 
-                      {
-                      vakjes[vakjesCounter] = 1
-                      beurt++;
-                      click.play();
-                      }
-                      if (beurt == 2 && vakjes[vakjesCounter] == 0 && RedWin == false && BlueWin == false)
-                      {
-                        vakjes[vakjesCounter] = 2
-                        beurt++;
-                        click.play();
-                      }
-                  
-                     
+class Motion {
+	constructor(x, y, d) {
+		this.x = x;
+		this.y = y;
+		this.d = d;
+		this.n = int(random(4, 15));
+		this.sw = d / this.n;
+		this.te = int(random(200, 400));
+		this.t = 0;
+		this.circles = [];
+		this.cols = [];
+		shuffle(colors, true);
+		for (let i = 0; i < this.n; i++) {
+			this.cols.push(colors[i % colors.length]);
+			this.circles.push(new Circle(0, 0, this.d * 1.1, -((this.te / this.n) * i) + this.te, this.te, this.cols[i]));
+		}
+		this.count = 0;
+	}
 
-                     
-                  
-                  if (beurt > 2)
-                  {
-                    beurt = 1;
-                  }
-                  }
-                  vakjesCounter++;    
-                }
-                 
-                
-                
-              
-            }
-        }
-        
-    }
-    //reset bij enter
-    function keyPressed(){
-  if (keyCode == ENTER) {
-   for (let i = 0; i < vakjes.length; i++) {
-        vakjes[i] = 0;
-    }
+	show() {
+		push();
+		translate(this.x, this.y);
+		strokeWeight(0);
+		stroke(0);
+		noFill();
+		circle(0, 0, this.d);
+		drawingContext.clip();
+		for (let i = 0; i < this.circles.length; i++) {
+			let r = this.circles[i];
+			r.show();
+			r.move();
+		}
+		for (let i = 0; i < this.circles.length; i++) {
+			let r = this.circles[i];
 
-    beurt = 1;
-    BlueWin = false;
-    RedWin = false;
-    Draw = false;
-  }
+			if (r.isDead) {
+				this.count++;
+				this.circles.splice(i, 1);
+				this.circles.push(new Circle(0, 0, this.d*1.1, 0, this.te, this.cols[this.count % this.cols.length]));
+			}
+		}
+		pop();
+
+	}
+	move() {
+		this.t++;
+	}
+}
+
+class Circle {
+	constructor(x, y, d, t0, t1, col) {
+		let th = random(TAU);
+		let r = random(0, 0.5) * d
+		this.x0 = x + r * cos(th);
+		this.x1 = x;
+		this.y0 = y + r * sin(th)
+		this.y1 = y;
+		this.x = this.x0;
+		this.y = this.y0;
+
+		this.d = 0;
+		this.d1 = d;
+		this.t = t0;
+		this.t1 = t1;
+		this.isDead = false;
+		this.col = col;
+
+		
+	}
+
+	show() {
+		noStroke();
+		fill(this.col);
+		circle(this.x, this.y, this.d);
+	}   
+
+	move() {
+		if (0 < this.t && this.t < this.t1) {
+			let n = norm(this.t, 0, this.t1 - 1);
+			this.d = lerp(0, this.d1, easeOutCirc(n));
+			this.x = lerp(this.x0, this.x1, easeOutCirc(n));
+			this.y = lerp(this.y0, this.y1, easeOutCirc(n));
+		}
+		if (this.t > this.t1) {
+			this.isDead = true;
+		}
+
+		this.t++;
+	}
 }
