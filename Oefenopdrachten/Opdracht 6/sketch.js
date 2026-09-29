@@ -22,30 +22,36 @@ function draw() {
   text("7.", 120, 190);
   text("8.", 120, 280);
   text("9.", 240, 15);
-  
+//1: Kleuren in een array
 let kleuren = [ "red", "green", "blue", "purple", "yellow"]
 for ( let i = 0; i < kleuren.length; i++) {
   fill(kleuren[i])
   text((kleuren[i]),40, 10 + i * 20)
 }
+//2: Pas de array aan met pop
   kleuren.shift("red");
   kleuren.push("red");
  for ( let i = 0; i < kleuren.length; i++) {
   fill(kleuren[i])
   text((kleuren[i]),40, 100 + i * 20)
 }
+//3: Twee kleuren weghalen
   kleuren.splice(1,2)
 for ( let i = 0; i < kleuren.length; i++) {
   fill(kleuren[i])
   text((kleuren[i]),40, 200 + i * 20)
 }
 fill(0)
+//4: Getallen filteren
 let getallen = [400, 240, 10, 490, 30, 60, 244, 500, 301, 300]
+let teller = 0;
 for (let i = 0; i < getallen.length; i++) {
   if (getallen[i] < 300){
-    text(getallen[i], 40, 250 + i * 10)
+    text(getallen[i], 40, 250 + teller * 10);
+    teller++;
   }
   }
+//5: Meerdere arrays optellen bij elkaar
 let totaal = 0
 let getalA = [3, 55, 93, 20, 102, 6]
 let getalB = [14, 22, 80, 5]
