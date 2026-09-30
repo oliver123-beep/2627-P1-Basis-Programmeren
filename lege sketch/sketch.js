@@ -1,3 +1,4 @@
+
 let grootte = []
 let richting = []
 let x = []
@@ -5,88 +6,225 @@ let y = []
 let z = []
 let kleuren = []
 let vorm = []
-let tijd = []
+let wachtijd = []
 
-function setup() {
-  createCanvas(800, 600, WEBGL);
-// loop voor alles
-  for (let i = 0; i < 100; i++) {
-    // kleuren
-    kleuren.push(color(random(255), random(255), random(255)));
+let aantal = 0
+let soundBox
 
-    // 10 random plekken in de array zetten
-    x.push(random(-400, 300));
-    y.push(random(-300, 250));
-    z.push(random(-300, 300));
+// 3 vaste blokken
+let blokX = [-200, 0, 200]
+let blokY = [0, 0, 0]
+let blokZ = [0, 0, 0]
 
-    // random vorm kiezen 0 is box en 1 is circle
-    vorm.push(random([0, 1, 2]));
 
-    // groote eigen array en richting eigen array
-    grootte.push(0);
-    richting.push(1);
+function preload() {
 
-    // random tijd
-    tijd.push(random(100));
-  }
+  soundBox = loadSound("audio_9afb73ceb5.mp3")
+
 }
 
+
+function setup() {
+
+  createCanvas(800, 600, WEBGL)
+
+  
+
+  // random aantal vormen
+
+  aantal = round(random(100, 150))
+
+  for (let i = 0; i < aantal; i++) {
+
+    // random kleuren
+
+    kleuren.push(color(
+      random(255),
+      random(255),
+      random(255)
+    ))
+
+    // random plekken
+
+    x.push(random(-400, 300))
+    y.push(random(-300, 250))
+    z.push(random(-300, 300))
+
+    // random vorm
+
+    vorm.push(random([0, 1, 2]))
+
+    // grootte en richting
+
+    grootte.push(0)
+    richting.push(1)
+
+    // random wachttijd
+
+    wachtijd.push(random(100))
+
+  }
+
+}
+
+
 function draw() {
-  background(220);
+
+  background(220)
   orbitControl();
 
-  // vormen plaatsen
-  for (let i = 0; i < 100; i++) {
 
-    // een vakje komt als de frameCount langs de random wachtijd gaat 
-    if (frameCount > tijd[i]) {
+  // 3 vaste blokken
 
-      // Groter en kleiner maken
-      grootte[i] += richting[i];
-      //kleiner
-      if (grootte[i] >= 50) {
-        richting[i] = -1;
-      }
-      //groter
-      // Als de vorm weg is
-      if (grootte[i] <= 0) {
-        grootte[i] = 0;
-        richting[i] = 1;
+  for (let i = 0; i < 3; i++) {
 
-        // als de vorm verdwijnt(0) krijgt het een nieuwe wachtijd
-        tijd[i] = frameCount + random(30, 150);
+    push()
 
-        // nieuwe random plaats
-        x[i] = random(-400, 300);
-        y[i] = random(-300, 250);
-        z[i] = random(-300, 300);
+    fill(100, 100, 255)
 
-        // nieuwe random kleur
-        kleuren[i] = color(random(255), random(255), random(255));
+    translate(
+      blokX[i],
+      blokY[i],
+      blokZ[i]
+    )
 
-        // nieuwe random vorm
-        vorm[i] = random([0, 1, 2]);
-      }
+    box(80)
 
-      //onthoud
-      push();
+    pop()
 
-      //kleur
-      fill(kleuren[i]);
-
-      //positie van 3d vormen
-      translate(x[i], y[i], z[i]);
-      //als de random vorm 0 zegt is het een doos en 1 is een sphere en 2 is een cone
-      if (vorm[i] == 0) {
-        box(grootte[i]);
-      } else if (vorm[i] == 1) {
-        sphere(grootte[i]);
-      } else {
-        cone(grootte[i]);
-      }
-
-      //reset
-      pop();
-    }
   }
+
+
+  // random vormen
+
+  for (let i = 0; i < aantal; i++) {
+
+    if (frameCount > wachtijd[i]) {
+
+      // groter en kleiner maken
+
+      grootte[i] += richting[i]
+
+
+      if (grootte[i] >= 50) {
+
+        richting[i] = -1
+
+      }
+
+
+      // als de vorm weg is
+
+      if (grootte[i] <= 0) {
+
+        grootte[i] = 0
+        richting[i] = 1
+
+        // nieuwe wachttijd
+
+        wachtijd[i] = frameCount + random(30, 150)
+
+        // nieuwe plek
+
+        x[i] = random(-400, 300)
+        y[i] = random(-300, 250)
+        z[i] = random(-300, 300)
+
+        // nieuwe kleur
+
+        kleuren[i] = color(
+          random(255),
+          random(255),
+          random(255)
+        )
+
+        // nieuwe vorm
+
+        vorm[i] = random([0, 1, 2])
+
+      }
+
+
+      push()
+
+      fill(kleuren[i])
+
+      translate(
+        x[i],
+        y[i],
+        z[i]
+      )
+
+
+      if (vorm[i] == 0) {
+
+        box(grootte[i])
+
+      } else if (vorm[i] == 1) {
+
+        sphere(grootte[i])
+
+      } else {
+
+        cone(grootte[i])
+
+      }
+
+      pop()
+
+    }
+
+  }
+
+}
+
+
+// spatie = nieuwe kleuren
+
+function keyPressed() {
+
+  if (keyCode == 32) {
+
+    for (let i = 0; i < aantal; i++) {
+
+      kleuren[i] = color(
+        random(255),
+        random(255),
+        random(255)
+      )
+
+    }
+
+    soundBox.play()
+
+  }
+
+}
+
+
+// klikken op de 3 blokken
+
+function mousePressed() {
+
+  // muispositie omzetten naar WEBGL
+  let muisX = mouseX - width / 2
+  let muisY = mouseY - height / 2
+
+
+  // kijken naar de 3 blokken
+
+  for (let i = 0; i < 3; i++) {
+
+    // afstand van muis tot blok op het scherm
+
+    let afstandX = abs(muisX - blokX[i])
+    let afstandY = abs(muisY - blokY[i])
+
+    // neppe hitbox want het werkt alleen op x 40 en y 40 en niet op de blokken
+    if (afstandX < 40 && afstandY < 40) {
+      soundBox.play()
+    }
+
+  }
+
 }

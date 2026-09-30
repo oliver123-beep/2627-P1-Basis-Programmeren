@@ -7,10 +7,17 @@ let kleuren = []
 let vorm = []
 let wachtijd = []
 
+let aantal = 0
+
+function preload () {
+  soundBox = loadSound ("audio_9afb73ceb5 - kopie.mp3")
+}
+
 function setup() {
   createCanvas(800, 600, WEBGL);
-// loop voor alles
-  for (let i = 0; i < random(100,150); i++) {
+// loop voor random getal waardoor tussen 100 en 150 vormen komen
+  aantal = round(random(100, 150));
+  for (let i = 0; i < aantal; i++) {
     // random kleuren
     kleuren.push(color(random(255), random(255), random(255)));
     // 10 random plekken in de array zetten
@@ -32,7 +39,7 @@ function draw() {
   orbitControl();
 
   // vormen plaatsen
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < aantal; i++) {
     // een vakje komt als de frameCount langs de random wachtijd gaat 
     if (frameCount > wachtijd[i]) {
       // Groter en kleiner maken
@@ -77,3 +84,23 @@ function draw() {
     }
   }
 }
+// als je op spatie klikt krig je een nieuwe random kleur
+function keyPressed () {
+if (keyCode == 32){
+  for (let i = 0; i < aantal; i++) {
+    kleuren[i] = color(random(255), random(255), random(255));
+  }
+  soundBox.play();
+}
+}
+function mousePressed()
+{
+  for (let i = 0; i < aantal; i++) {
+    if (grootte[i] > 40){
+      if (mouseX < box && mouseX > box && mouseY < box && mouseY > box) {
+        soundBox.play();
+      }
+    } 
+  }
+}
+ 
