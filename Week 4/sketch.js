@@ -57,7 +57,7 @@ function draw() {
         // nieuwe random vorm
         vorm[i] = random([0, 1, 2]);
       }
-
+    //vormen maken
       //onthoud
       push();
       //kleur
