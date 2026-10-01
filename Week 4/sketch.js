@@ -1,6 +1,4 @@
-// ---------- Eigenschappen van de vormen ----------
-// Elke vorm heeft een plek in al deze lijsten (arrays).
-// Vorm nummer 5 gebruikt dus overal index 5.
+
 let grootte = []   // huidige grootte van elke vorm
 let richting = []  // 1 = groeien, -1 = krimpen
 let x = []         // x-positie
@@ -10,15 +8,14 @@ let kleuren = []   // kleur van elke vorm
 let vorm = []      // 0 = box, 1 = sphere, 2 = cone
 let tijd = []      // frame waarop de vorm mag verschijnen
 
-// ---------- Geluiden ----------
 let boxSound
 let sphereSound
 let coneSound
 
-// Aantal vormen in de scène
+// Aantal vormen
 const AANTAL = 100
 
-// ---------- Klik-detectie ----------
+
 let pickAangevraagd = false // true als er net geklikt is
 let pressX, pressY          // plek waar de muis werd ingedrukt
 
@@ -30,19 +27,10 @@ function preload() {
   coneSound = loadSound("universfield-bright-notification-352449.mp3")
 }
 
-// setup draait één keer aan het begin
 function setup() {
-  // 3D-canvas (WEBGL) van 800 bij 600 pixels
   createCanvas(800, 600, WEBGL)
 
-  // nodig voor het klikken: geen anti-aliasing,
-  // zodat kleuren aan de randen niet door elkaar lopen
-  setAttributes('antialias', false)
-
-  // 1 schermpixel = 1 canvaspixel, zodat get() de juiste pixel pakt
-  pixelDensity(1)
-
-  // voor elke vorm beginwaarden maken
+  // voor elke vorm begin plaats maken
   for (let i = 0; i < AANTAL; i++) {
     // random kleur
     kleuren.push(color(random(255), random(255), random(255)))
@@ -64,7 +52,6 @@ function setup() {
   }
 }
 
-// draw draait elk frame, de hele tijd
 function draw() {
   // camera draaien, zoomen en pannen met de muis
   orbitControl()
@@ -72,7 +59,7 @@ function draw() {
   // eerst de animatie bijwerken (één keer per frame)
   updateVormen()
 
-  // als er geklikt is, doen we een onzichtbare "pick-pass"
+  // als er geklikt is, doen we een onzichtbare "pick-pass" die de tekenscene 1 keer laat tekenen
   if (pickAangevraagd) {
     pickAangevraagd = false
 
@@ -137,18 +124,8 @@ function updateVormen() {
 // pickModus = true  -> onzichtbare pick-pass met id-kleuren
 // pickModus = false -> de normale weergave
 function tekenScene(pickModus) {
-  // in de pick-pass is de achtergrond zwart (= id 0 = niets geraakt)
-  background(pickModus ? 0 : 220)
-
-  // rand alleen in de normale weergave
-  // (in de pick-pass zou de rand de id-kleuren verpesten)
-  if (pickModus) {
-    noStroke()
-  } else {
-    stroke(0)       // kleur van de rand
-    strokeWeight(1) // dikte van de rand
-  }
-
+  background(220)
+  
   for (let i = 0; i < AANTAL; i++) {
 
     // alleen vormen tekenen die al verschenen zijn en zichtbaar zijn
@@ -200,8 +177,6 @@ function vormGeraakt(i) {
 
 // muisknop ingedrukt
 function mousePressed() {
-  // browsers blokkeren geluid tot er geklikt is; dit staat het toe
-  userStartAudio()
 
   // onthoud waar de muis werd ingedrukt
   pressX = mouseX
@@ -212,7 +187,7 @@ function mousePressed() {
 function mouseReleased() {
   // het telt alleen als klik als de muis nauwelijks bewogen is,
   // anders was je aan het draaien met orbitControl
-  if (dist(mouseX, mouseY, pressX, pressY) < 5) {
+  if (dist(mouseX, mouseY, pressX, pressY) < 10) {
     pickAangevraagd = true
   }
 }
