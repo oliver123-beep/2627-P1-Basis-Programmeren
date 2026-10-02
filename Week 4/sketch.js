@@ -15,6 +15,7 @@ let coneSound;
 const AANTAL = 100;
 
 
+
 let pickAangevraagd = false; // true als er net geklikt is
 let pressX, pressY;          // plek waar de muis werd ingedrukt
 let clickX, clickY;          // plek waar er geklikt is (nieuw)
@@ -29,9 +30,6 @@ function preload() {
 
 function setup() {
   createCanvas(800, 600, WEBGL);
-
-  // geen anti-aliasing, zodat kleuren aan de randen niet door elkaar lopen
-  setAttributes('antialias', false);
 
   // 1 schermpixel = 1 canvaspixel, zodat get() de juiste pixel pakt
   pixelDensity(1);
@@ -206,7 +204,7 @@ function mousePressed() {
 function mouseReleased() {
   // het telt alleen als klik als de muis nauwelijks bewogen is,
   // anders was je aan het draaien met orbitControl
-  if (dist(mouseX, mouseY, pressX, pressY) < 15) {
+  if (dist(mouseX, mouseY, pressX, pressY) < 10) {
     pickAangevraagd = true;
 
     // onthoud waar er geklikt is
