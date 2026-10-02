@@ -130,7 +130,7 @@ function updateVormen() {
 // pickModus = false -> de normale weergave
 function tekenScene(pickModus) {
   // in de pick-pass is de achtergrond zwart (= id 0 = niets geraakt)
-  background(pickModus ? 0 : 220);
+  background(220);
 
   // in de pick-pass geen rand, anders verpest de rand de id-kleuren
   if (pickModus) {
@@ -206,6 +206,7 @@ function mouseReleased() {
   // anders was je aan het draaien met orbitControl
   if (dist(mouseX, mouseY, pressX, pressY) < 10) {
     pickAangevraagd = true;
+
 
     // onthoud waar er geklikt is
     clickX = mouseX;
