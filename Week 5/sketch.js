@@ -1,5 +1,8 @@
 let menu = true;
 let vraagNummer = 0;
+let x = 0;
+let speed = 0.05;
+let tijd = true;
 
 // Juiste antwoorden  (0 = A, 1 = B, 2 = C, 3 = D)
 let juisteOrigineel = [1, 2, 0, 1, 1, 2, 1, 0, 1, 2];
@@ -112,14 +115,24 @@ function draw() {
     background(255, 0, 0);
     start();
     image(pokeball, 50,50, 100,100)
+    text("Pokemon quiz!", 200, 300)
   }
   //de knopen na het menu
   if (menu == false) {
     background(255);
+    //zorgt dat de timert verdwijnt bij vraag 10
+    if (vraagNummer >= 1 && gekozen[vraagNummer - 1] == -1) {
+      timer();
+    }
+    if (tijd == false) {
+      fill(255,0,0)
+      textSize(32);
+      text("tijd is op!", 200,200);
+    }
     volgende();
     vorige();
     resetknop();
-    text(frameCount,350,20);
+    
     // vragen
     if (vraagNummer == 1) {
       vraag("1. Wat doet Fake Out?");
@@ -179,9 +192,20 @@ function draw() {
   }
 }
 function timer (){
-  x += 0.1 * deltaTime;  // beweegt 0.1 pixels per milliseconde
-  fill(255,0,0)
-  circle(x, 390, 50);
+  let deltaX = speed * deltaTime;
+  x += deltaX;
+  if (x > width && tijd == true) {
+    tijd = false;
+    // te laat: tel als fout, maar zonder "Fout!" te tonen
+    let nummer = vraagNummer - 1;
+    if (gekozen[nummer] == -1) {
+      gekozen[nummer] = 4;
+    }
+  }
+  fill(200)
+  strokeWeight(10)
+  rect(10,350,400,50,50)
+  image(pokeball, x, 350, 50, 50);
 }
 //de startknop
 function start() {
@@ -231,12 +255,11 @@ function antwoordenA(nummer) {
 function feedback() {
   let nummer = vraagNummer - 1;
   if (nummer < 0) return;
-  //als het nog niet gekozen is
-  if (gekozen[nummer] != -1) {
+  // nog niet gekozen (-1) of te laat (4): geen melding
+  if (gekozen[nummer] != -1 && gekozen[nummer] != 4) {
     textSize(24);
     textAlign(CENTER);
     noStroke();
-    //als het gekozen nummer het juiste antwoord is is het juist
     if (gekozen[nummer] == juisteAntwoorden[nummer]) {
       fill(0, 170, 0);
       text("Juist!", 200, 260);
@@ -276,7 +299,7 @@ function vorige() {
 
 //resetknop
 function resetknop() {
-  image(reset, 175, 325, 50, 50);
+  image(reset, 175, 300, 50, 50);
 }
 
 // Kijkt of alle vragen zijn beantwoord
@@ -305,6 +328,7 @@ function einde() {
     textAlign(CENTER);
     text("Einde! Score: " + score + "/10", 200, 392);
     textAlign(LEFT);
+    timer(false);
   }
 }
 
@@ -327,7 +351,7 @@ function mousePressed() {
       if (mouseX > 10 && mouseX < 390 &&
           mouseY > y - 18 && mouseY < y + 8) {
         // Alleen kiezen als je nog niet geantwoord hebt
-        if (gekozen[nummer] == -1) {
+        if (gekozen[nummer] == -1 && tijd == true) {
           gekozen[nummer] = i;
         }
       }
@@ -339,6 +363,8 @@ function mousePressed() {
       if (vraagNummer < 10) {
         vraagNummer++;
         frameCount = 0;
+        x = 0;
+        tijd = true;
       }
     }
 
@@ -347,12 +373,14 @@ function mousePressed() {
         mouseY > 300 && mouseY < 350) {
       if (vraagNummer > 1) {
         vraagNummer--;
+        x = 0;
+        tijd = true;
       }
     }
 
     // terug naar menu
     if (mouseX > 175 && mouseX < 225 &&
-        mouseY > 325 && mouseY < 375) {
+        mouseY > 300 && mouseY < 350) {
       menu = true;
       // Alle antwoorden wissen
       for (let i = 0; i < gekozen.length; i++) {
@@ -361,6 +389,8 @@ function mousePressed() {
       // Nieuwe willekeurige volgorde voor de volgende ronde
       husselAlles();
       frameCount = 0;
+      x = 0;
+      tijd = true;
     }
   }
 }
