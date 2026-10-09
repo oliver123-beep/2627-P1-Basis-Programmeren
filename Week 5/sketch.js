@@ -191,6 +191,7 @@ function draw() {
     einde();
   }
 }
+
 function timer (){
   let deltaX = speed * deltaTime;
   x += deltaX;
@@ -328,7 +329,6 @@ function einde() {
     textAlign(CENTER);
     text("Einde! Score: " + score + "/10", 200, 392);
     textAlign(LEFT);
-    timer(false);
   }
 }
 
