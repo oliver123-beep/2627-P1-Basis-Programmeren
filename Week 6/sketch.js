@@ -30,6 +30,8 @@ function preload() {
   Potion = loadImage("Potion.png")
   HiPotion = loadImage("Hi-Potion.png")
   gummiShip = loadImage("gummi.png")
+  WorldMenuButton = loadImage ("World Menu Pixel Button.png")
+  SeaSaltIceCreamButton = loadImage ("Sea Salt Ice Cream Shop Button.png")
 
 }
 
@@ -180,8 +182,8 @@ function Achtergronden() {
   if (achtergrond == 6) {
     background(Olympus);
   }
-  if (achtergrond > 6) {
-    achtergrond = 0;
+  if (achtergrond >=6 ) {
+    background = 0
   }
 }
 
@@ -204,6 +206,8 @@ function Eten(){
 function Healing(){
   image(Potion, 250,370,150,20)
   image(HiPotion, 250, 345,150,20)
+  image(WorldMenuButton, 400, 355, 150,50)
+  image(SeaSaltIceCreamButton, 400,330,150,50)
 }
 function mousePressed() {
   // knoppen in het menu
@@ -289,6 +293,17 @@ function mousePressed() {
       && achtergrond == 3) {
     achtergrond = 7;
   }
+
+  if (mouseX > 400 && mouseX < 550
+      && mouseY > 355 && mouseY < 405
+      && achtergrond == 2) {
+
+      }
+  if (mouseX > 400 && mouseX < 550
+      && mouseY > 330 && mouseY < 380
+      && achtergrond == 2) {
+        
+      }
 }
 
 function keyPressed() {
