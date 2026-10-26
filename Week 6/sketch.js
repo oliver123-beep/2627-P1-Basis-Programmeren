@@ -119,7 +119,7 @@ function Roxas() {
 }
 
 function Eten(){
-  image(SeaSaltIceCream, 50, 50, 50,100)
+  image(SeaSaltIceCream, mouseX, mouseY, 50,100)
  
 }
 
