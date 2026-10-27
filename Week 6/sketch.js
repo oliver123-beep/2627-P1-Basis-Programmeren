@@ -297,12 +297,13 @@ function mousePressed() {
   if (mouseX > 400 && mouseX < 550
       && mouseY > 355 && mouseY < 405
       && achtergrond == 2) {
-
+         achtergrond = 3 
+       // ijsje ++;
+        //munny = munny -15
       }
   if (mouseX > 400 && mouseX < 550
       && mouseY > 330 && mouseY < 380
       && achtergrond == 2) {
-        
       }
 }
 
