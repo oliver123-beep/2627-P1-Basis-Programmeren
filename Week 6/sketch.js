@@ -3,20 +3,66 @@ let honger = 100;
 let energie = 100;
 let geluk = 100;
 let gezondheid = 100;
+let munny = 0;
+let aantalIjsjes = 3;   // ijsjes inventory
 let statsMenuKnop = false;
 let roxasIntroStart = true;
 let EtenClicked = false;
 let etenZichtbaar = false;
 let opnieuwKnop;
-let aanvalFrames = [];
-let frameAantal = 60;
+let startKnop;
+let stopKnop;
+let sleepingVideo;
+let slapenActief = false;
 
-// video / gevecht
-let vid;
-let videoSpeelt = false;
+// gevecht
 let RoxasFight = false;
-let hitLeft = false;
-let hitRight = false;
+let gevechtActief = false;
+let heartlessAanwezig = false;  // staat er nu een heartless?
+let heartlessNummer = 1;        // welke heartless: 1, 2 of 3
+let heartlessKant = "L";        // "L" = links, "R" = rechts
+let heartlessStatus = 0;        // 0 = wacht, 1 = heartless slaat Roxas, 2 = Roxas slaat heartless
+let heartlessStartTijd = 0;
+let heartlessEindTijd = 0;
+let volgendeSpawn = 0;
+
+// de twee video's van de heartless die er nu is
+let hitVideo;      // roxasHit: Roxas slaat
+let getHitVideo;   // roxasGetHit: de heartless slaat
+
+// idle video's: B = wereld 1, A = wereld 2, C = wereld 3
+let roxasIdleB;
+let roxasIdleA;
+let roxasIdleC;
+
+// alle gevechtsvideo's (letter = wereld, cijfer = heartless, L/R = kant)
+let roxasHitB1L, roxasGetHitB1L, roxasHitB1R, roxasGetHitB1R;
+let roxasHitB2L, roxasGetHitB2L, roxasHitB2R, roxasGetHitB2R;
+let roxasHitB3L, roxasGetHitB3L, roxasHitB3R, roxasGetHitB3R;
+let roxasHitA1L, roxasGetHitA1L, roxasHitA1R, roxasGetHitA1R;
+let roxasHitA2L, roxasGetHitA2L, roxasHitA2R, roxasGetHitA2R;
+let roxasHitA3L, roxasGetHitA3L, roxasHitA3R, roxasGetHitA3R;
+let roxasHitC1L, roxasGetHitC1L, roxasHitC1R, roxasGetHitC1R;
+let roxasHitC2L, roxasGetHitC2L, roxasHitC2R, roxasGetHitC2R;
+let roxasHitC3L, roxasGetHitC3L, roxasHitC3R, roxasGetHitC3R;
+
+const WACHTTIJD = 3000;
+const PAUZE = 1000;
+const ANIMATIETIJD = 1600;
+const MUNNY_BELONING = 50;   // munny per verslagen heartless
+
+// prijzen in de shop
+const PRIJS_POTION = 10;
+const PRIJS_HIPOTION = 25;
+const PRIJS_IJSJE = 15;
+
+// klikgebied van Roxas (in de werelden is de scene-video groter)
+function opRoxas() {
+  if (achtergrond >= 4) {
+    return mouseX > 200 && mouseX < 450 && mouseY > 100 && mouseY < 400;
+  }
+  return mouseX > 250 && mouseX < 350 && mouseY > 200 && mouseY < 300;
+}
 
 function preload() {
   stairs = loadImage("background.gif");
@@ -43,17 +89,185 @@ function preload() {
   SeaSaltIceCreamButton = loadImage("Sea Salt Ice Cream Shop Button.png");
 }
 
-function setup() {
-  let canvas = createCanvas(700, 400);
+// Maakt een verborgen video die we zelf op het canvas tekenen.
+function maakVideo(naam) {
+  let v = createVideo(naam);
+  v.hide();
+  v.volume(0);
+  return v;
+}
 
-  // video wordt in setup gemaakt (niet in preload)
-  vid = createVideo("RealRoxasHit.mp4");
-  vid.hide();       // verberg het losse HTML-element, we tekenen hem zelf op het canvas
-  vid.volume(0);    // muted, anders blokkeert de browser het afspelen
-  vid.onended(function () {
-    videoSpeelt = false;
+// Tekent een video.
+let laatsteVideo;                // de laatste video die getekend is
+let eerderGetekend = false;      // is er al een video getekend?
+
+function tekenVideo(v) {
+  // duration() is pas groter dan 0 als de video geladen is
+  if (v.duration() > 0) {
+    image(v, 0, 0, 700, 400);
+    laatsteVideo = v;
+    eerderGetekend = true;
+  } else if (eerderGetekend == true) {
+    image(laatsteVideo, 0, 0, 700, 400);
+  }
+}
+
+// Laadt alle video's.
+function laadVideos() {
+  roxasIdleB = maakVideo("roxasIdleB.mp4");
+  roxasIdleA = maakVideo("roxasIdleA.mp4");
+  roxasIdleC = maakVideo("roxasIdleC.mp4");
+
+  roxasHitB1L = maakVideo("roxasHitB1L.mp4");
+  roxasGetHitB1L = maakVideo("roxasGetHitB1L.mp4");
+  roxasHitB1R = maakVideo("roxasHitB1R.mp4");
+  roxasGetHitB1R = maakVideo("roxasGetHitB1R.mp4");
+  roxasHitB2L = maakVideo("roxasHitB2L.mp4");
+  roxasGetHitB2L = maakVideo("roxasGetHitB2L.mp4");
+  roxasHitB2R = maakVideo("roxasHitB2R.mp4");
+  roxasGetHitB2R = maakVideo("roxasGetHitB2R.mp4");
+  roxasHitB3L = maakVideo("roxasHitB3L.mp4");
+  roxasGetHitB3L = maakVideo("roxasGetHitB3L.mp4");
+  roxasHitB3R = maakVideo("roxasHitB3R.mp4");
+  roxasGetHitB3R = maakVideo("roxasGetHitB3R.mp4");
+  roxasHitA1L = maakVideo("roxasHitA1L.mp4");
+  roxasGetHitA1L = maakVideo("roxasGetHitA1L.mp4");
+  roxasHitA1R = maakVideo("roxasHitA1R.mp4");
+  roxasGetHitA1R = maakVideo("roxasGetHitA1R.mp4");
+  roxasHitA2L = maakVideo("roxasHitA2L.mp4");
+  roxasGetHitA2L = maakVideo("roxasGetHitA2L.mp4");
+  roxasHitA2R = maakVideo("roxasHitA2R.mp4");
+  roxasGetHitA2R = maakVideo("roxasGetHitA2R.mp4");
+  roxasHitA3L = maakVideo("roxasHitA3L.mp4");
+  roxasGetHitA3L = maakVideo("roxasGetHitA3L.mp4");
+  roxasHitA3R = maakVideo("roxasHitA3R.mp4");
+  roxasGetHitA3R = maakVideo("roxasGetHitA3R.mp4");
+  roxasHitC1L = maakVideo("roxasHitC1L.mp4");
+  roxasGetHitC1L = maakVideo("roxasGetHitC1L.mp4");
+  roxasHitC1R = maakVideo("roxasHitC1R.mp4");
+  roxasGetHitC1R = maakVideo("roxasGetHitC1R.mp4");
+  roxasHitC2L = maakVideo("roxasHitC2L.mp4");
+  roxasGetHitC2L = maakVideo("roxasGetHitC2L.mp4");
+  roxasHitC2R = maakVideo("roxasHitC2R.mp4");
+  roxasGetHitC2R = maakVideo("roxasGetHitC2R.mp4");
+  roxasHitC3L = maakVideo("roxasHitC3L.mp4");
+  roxasGetHitC3L = maakVideo("roxasGetHitC3L.mp4");
+  roxasHitC3R = maakVideo("roxasHitC3R.mp4");
+  roxasGetHitC3R = maakVideo("roxasGetHitC3R.mp4");
+}
+
+// Kiest de twee video's die bij de heartless horen die er nu is.
+function kiesVideos() {
+  if (achtergrond == 4 && heartlessNummer == 1 && heartlessKant == "L") {
+    hitVideo = roxasHitB1L;
+    getHitVideo = roxasGetHitB1L;
+  }
+  if (achtergrond == 4 && heartlessNummer == 1 && heartlessKant == "R") {
+    hitVideo = roxasHitB1R;
+    getHitVideo = roxasGetHitB1R;
+  }
+  if (achtergrond == 4 && heartlessNummer == 2 && heartlessKant == "L") {
+    hitVideo = roxasHitB2L;
+    getHitVideo = roxasGetHitB2L;
+  }
+  if (achtergrond == 4 && heartlessNummer == 2 && heartlessKant == "R") {
+    hitVideo = roxasHitB2R;
+    getHitVideo = roxasGetHitB2R;
+  }
+  if (achtergrond == 4 && heartlessNummer == 3 && heartlessKant == "L") {
+    hitVideo = roxasHitB3L;
+    getHitVideo = roxasGetHitB3L;
+  }
+  if (achtergrond == 4 && heartlessNummer == 3 && heartlessKant == "R") {
+    hitVideo = roxasHitB3R;
+    getHitVideo = roxasGetHitB3R;
+  }
+  if (achtergrond == 5 && heartlessNummer == 1 && heartlessKant == "L") {
+    hitVideo = roxasHitA1L;
+    getHitVideo = roxasGetHitA1L;
+  }
+  if (achtergrond == 5 && heartlessNummer == 1 && heartlessKant == "R") {
+    hitVideo = roxasHitA1R;
+    getHitVideo = roxasGetHitA1R;
+  }
+  if (achtergrond == 5 && heartlessNummer == 2 && heartlessKant == "L") {
+    hitVideo = roxasHitA2L;
+    getHitVideo = roxasGetHitA2L;
+  }
+  if (achtergrond == 5 && heartlessNummer == 2 && heartlessKant == "R") {
+    hitVideo = roxasHitA2R;
+    getHitVideo = roxasGetHitA2R;
+  }
+  if (achtergrond == 5 && heartlessNummer == 3 && heartlessKant == "L") {
+    hitVideo = roxasHitA3L;
+    getHitVideo = roxasGetHitA3L;
+  }
+  if (achtergrond == 5 && heartlessNummer == 3 && heartlessKant == "R") {
+    hitVideo = roxasHitA3R;
+    getHitVideo = roxasGetHitA3R;
+  }
+  if (achtergrond == 6 && heartlessNummer == 1 && heartlessKant == "L") {
+    hitVideo = roxasHitC1L;
+    getHitVideo = roxasGetHitC1L;
+  }
+  if (achtergrond == 6 && heartlessNummer == 1 && heartlessKant == "R") {
+    hitVideo = roxasHitC1R;
+    getHitVideo = roxasGetHitC1R;
+  }
+  if (achtergrond == 6 && heartlessNummer == 2 && heartlessKant == "L") {
+    hitVideo = roxasHitC2L;
+    getHitVideo = roxasGetHitC2L;
+  }
+  if (achtergrond == 6 && heartlessNummer == 2 && heartlessKant == "R") {
+    hitVideo = roxasHitC2R;
+    getHitVideo = roxasGetHitC2R;
+  }
+  if (achtergrond == 6 && heartlessNummer == 3 && heartlessKant == "L") {
+    hitVideo = roxasHitC3L;
+    getHitVideo = roxasGetHitC3L;
+  }
+  if (achtergrond == 6 && heartlessNummer == 3 && heartlessKant == "R") {
+    hitVideo = roxasHitC3R;
+    getHitVideo = roxasGetHitC3R;
+  }
+}
+
+// Speelt de idle van de wereld waar je nu bent (blijft herhalen).
+function speelIdle() {
+  if (achtergrond == 4) {
+    roxasIdleB.loop();
+  }
+  if (achtergrond == 5) {
+    roxasIdleA.loop();
+  }
+  if (achtergrond == 6) {
+    roxasIdleC.loop();
+  }
+}
+
+// Speelt een video vanaf het begin af.
+function startVid(v) {
+  v.time(0);
+  v.play();
+}
+
+function setup() {
+  createCanvas(700, 400);
+
+  laadVideos();
+
+  // Nieuwe slaapvideo.
+  sleepingVideo = maakVideo("sleeping.mp4");
+  sleepingVideo.onended(function() {
+    slapenActief = false;
+    sleepingVideo.pause();
   });
 
+  roxasIdleB.loop();
+  roxasIdleA.loop();
+  roxasIdleC.loop();
+
+  // Opnieuw-knop.
   opnieuwKnop = createButton("Opnieuw beginnen");
   opnieuwKnop.position(300, 300);
   opnieuwKnop.size(200, 40);
@@ -66,13 +280,42 @@ function setup() {
   opnieuwKnop.style("border-radius", "10px");
   opnieuwKnop.mousePressed(opnieuw);
   opnieuwKnop.hide();
+
+  // Start-knop voor gevechten.
+  startKnop = createButton("Start");
+  startKnop.position(20, 340);
+  startKnop.size(90, 35);
+  startKnop.style("font-size", "18px");
+  startKnop.style("background-color", "green");
+  startKnop.style("color", "white");
+  startKnop.mousePressed(startGevecht);
+  startKnop.hide();
+
+  // Stop-knop voor gevechten.
+  stopKnop = createButton("Stop");
+  stopKnop.position(120, 340);
+  stopKnop.size(90, 35);
+  stopKnop.style("font-size", "18px");
+  stopKnop.style("background-color", "darkred");
+  stopKnop.style("color", "white");
+  stopKnop.mousePressed(stopGevecht);
+  stopKnop.hide();
 }
 
 function draw() {
   start();
 
-  // je kunt alleen vechten in de werelden (Halloween Town, Agrabah, Olympus)
+  // Vechten kan alleen in de drie werelden.
   RoxasFight = achtergrond >= 4;
+
+  // start/stop verdwijnen als je slaapt
+  if (RoxasFight && !dood() && !roxasIntroStart && slapenActief == false) {
+    startKnop.show();
+    stopKnop.show();
+  } else {
+    startKnop.hide();
+    stopKnop.hide();
+  }
 
   if (roxasIntroStart == true) {
     background(RoxasIntro);
@@ -86,16 +329,21 @@ function draw() {
       Roxas();
       Eten();
       EtenMove();
-      VideoTekenen();
+
+      if (RoxasFight) {
+        GevechtUpdate();
+        HeartlessTekenen();
+        GevechtInfo();
+      }
+
       image(statsMenu, 600, 300, 100, 100);
 
-      // verlaagt de stats ook als het menu afgesloten is
-      honger = verlaag(honger, 40);
-      energie = verlaag(energie, 60);
-      geluk = verlaag(geluk, 70);
+      // Statistieken lopen langzaam terug.
+      honger = verlaag(honger, 60);
+      energie = verlaag(energie, 80);
+      geluk = verlaag(geluk, 75);
       gezondheid = verlaag(gezondheid, 90);
 
-      // stats te zien alleen als het menu open is
       if (statsMenuKnop == true) {
         Stats("honger", honger, 20);
         Stats("energie", energie, 60);
@@ -105,86 +353,226 @@ function draw() {
       }
     }
   }
+
+  // Slaapvideo boven op de game tekenen.
+  if (slapenActief &&
+      sleepingVideo &&
+      sleepingVideo.duration() > 0) {
+    image(sleepingVideo, 0, 0, 700, 400);
+  }
 }
 
-// tekent de aanvalsvideo bovenop de achtergrond, alleen terwijl hij speelt
-function VideoTekenen() {
-  if (videoSpeelt == true && RoxasFight == true) {
-    if (hitLeft == true) {
-      image(vid, 0, 0, 700, 400);
+// ---------------- GEVECHT ----------------
+
+function startGevecht() {
+  gevechtActief = true;
+  speelIdle();
+  if (heartlessAanwezig == false) {
+    volgendeSpawn = millis();
+  }
+}
+
+function stopGevecht() {
+  gevechtActief = false; // er komen geen nieuwe heartless meer
+  if (heartlessAanwezig == true) {
+    hitVideo.pause();
+    getHitVideo.pause();
+    heartlessAanwezig = false;
+  }
+}
+
+function resetGevecht() {
+  gevechtActief = false;
+  heartlessAanwezig = false;
+  speelIdle(); // idle speelt zodra je de wereld binnengaat
+}
+
+function GevechtUpdate() {
+  let nu = millis();
+
+  if (heartlessAanwezig == false) {
+    // geen heartless: idle speelt, en na de pauze komt er een nieuwe
+    if (gevechtActief == true && nu >= volgendeSpawn) {
+      heartlessNummer = floor(random(1, 4));
+      if (random() < 0.5) {
+        heartlessKant = "L";
+      } else {
+        heartlessKant = "R";
+      }
+      kiesVideos();
+
+      heartlessAanwezig = true;
+      heartlessStatus = 0;
+      heartlessStartTijd = nu;
+      EtenClicked = false; // ijsje valt weg zodra er een heartless komt
+
+      // eerste beeld blijft staan terwijl hij wacht
+      getHitVideo.time(0);
+      getHitVideo.pause();
+    }
+  } else {
+    // na 3 seconden slaat de heartless zelf
+    if (heartlessStatus == 0 && nu - heartlessStartTijd >= WACHTTIJD) {
+      heartlessSlaat();
+    }
+    // animatie klaar: volgende heartless na de pauze
+    else if (heartlessStatus != 0 && nu >= heartlessEindTijd) {
+      heartlessAanwezig = false;
+      volgendeSpawn = nu + PAUZE;
     }
   }
 }
 
-function startVideo() {
-  vid.stop();
-  vid.time(0);
-  vid.play();
-  videoSpeelt = true;
+// De heartless slaat Roxas: speel roxasGetHit
+function heartlessSlaat() {
+  heartlessStatus = 1;
+  startVid(getHitVideo);
+  heartlessEindTijd = millis() + ANIMATIETIJD;
+
+  gezondheid = max(0, gezondheid - 10);
+  geluk = max(0, geluk - 10);
 }
+
+// Roxas slaat de heartless: speel roxasHit
+function heartlessVerslagen() {
+  heartlessStatus = 2;
+  startVid(hitVideo);
+  heartlessEindTijd = millis() + ANIMATIETIJD;
+
+  geluk = min(100, geluk + 10);
+  munny = munny + MUNNY_BELONING;
+  energie = max(0, energie - 5);
+}
+
+function HeartlessTekenen() {
+  if (heartlessAanwezig == true) {
+    if (heartlessStatus == 2) {
+      tekenVideo(hitVideo);
+    } else {
+      tekenVideo(getHitVideo);
+    }
+  }
+}
+
+function GevechtInfo() {
+  fill(255);
+  stroke(0);
+  strokeWeight(3);
+  textSize(16);
+  text("munny: " + munny, 10, 25);
+  noStroke();
+  textSize(12);
+}
+
+// kant is "L" of "R"
+function Slaan(kant) {
+  if (heartlessAanwezig == true && heartlessStatus == 0) {
+    if (heartlessKant == kant) {
+      heartlessVerslagen(); // goede kant
+    } else {
+      heartlessSlaat();     // verkeerde kant
+    }
+  }
+}
+
+// ---------------- OPNIEUW BEGINNEN ----------------
 
 function opnieuw() {
   honger = 100;
   energie = 100;
   geluk = 100;
   gezondheid = 100;
+  munny = 0;
+  aantalIjsjes = 3;
+
   achtergrond = 0;
   statsMenuKnop = false;
   roxasIntroStart = true;
   EtenClicked = false;
   etenZichtbaar = false;
-  videoSpeelt = false;
-  vid.stop();
+
+  slapenActief = false;
+
+  if (sleepingVideo) {
+    sleepingVideo.pause();
+  }
+
+  resetGevecht();
   opnieuwKnop.hide();
 }
+
+// ---------------- STATISTIEKEN ----------------
 
 function verlaag(waarde, snelheid) {
   if (frameCount % snelheid === 0 && waarde > 0) {
     return waarde - 1;
   }
+
   return waarde;
 }
 
 function Stats(naam, waarde, y) {
-  // tekst is geel in Halloween Town, anders zwart
+  // Gele tekst in Halloween Town.
   if (achtergrond == 4) {
     fill(255, 255, 0);
   } else {
     fill(0);
   }
+
   text(naam + ": " + waarde, 600, y - 5);
+
   fill(0);
   rect(600, y, 100, 10);
+
   fill(255, 0, 0);
   rect(600, y, waarde, 10);
 }
 
+// ---------------- MENU ----------------
+
 function MenuKnoppen() {
-  fill(139, 69, 19);
+  // tijdens het vechten zijn de knoppen grijs (niet klikbaar)
+  if ((gevechtActief || heartlessAanwezig)) {
+    fill(90);
+  } else {
+    fill(139, 69, 19);
+  }
   stroke(255, 0, 0);
   strokeWeight(2);
+
   rect(600, 170, 100, 25, 5);
   rect(600, 200, 100, 25, 5);
+  rect(600, 230, 100, 25, 5);
+
   noStroke();
   fill(255);
+
   textAlign(CENTER, CENTER);
+
   text("menu", 650, 182);
   text("eten", 650, 212);
+  text("slapen", 650, 242);
+
   textAlign(LEFT, BASELINE);
 }
 
-// eten is overal te zien behalve in de shop en de worldmap
+// Eten is overal zichtbaar behalve in de shop en worldmap.
 function etenScherm() {
   return achtergrond != 2 && achtergrond != 3;
 }
 
-// ijsje is te zien op het balcon, of als je het met de knop hebt aangezet
+// Bepaalt of het ijsje zichtbaar is.
 function etenTeZien() {
-  return etenScherm() && (etenZichtbaar == true || achtergrond == 1);
+  return etenScherm() &&
+    (etenZichtbaar == true || achtergrond == 1);
 }
 
+// Bepaalt of Roxas dood is.
 function dood() {
-  return gezondheid <= 0 || honger <= 0 || energie <= 0 || geluk <= 0;
+  return gezondheid <= 0 ||
+    honger <= 0 ||
+    energie <= 0 ||
+    geluk <= 0;
 }
 
 function start() {
@@ -193,42 +581,70 @@ function start() {
   }
 }
 
+// ---------------- ACHTERGRONDEN ----------------
+
 function Achtergronden() {
   if (achtergrond == 0) {
     background(stairs);
   }
+
   if (achtergrond == 1) {
     background(balcon);
   }
+
   if (achtergrond == 2) {
     background(Shop);
     Healing();
   }
+
   if (achtergrond == 3) {
     background(WorldMenu);
+
     image(World1, 120, 10, 170, 190);
     image(World2, 100, 170, 170, 190);
     image(World3, 450, 200, 170, 190);
     image(World4, 300, 50, 150, 170);
-    //gummi laten bewegen
+
     image(gummiShip, 350, 120, 120, 100);
   }
+
   if (achtergrond == 4) {
     background(HalloweenTown);
   }
+
   if (achtergrond == 5) {
     background(Agrabah);
   }
+
   if (achtergrond == 6) {
     background(Olympus);
   }
 }
 
+// ---------------- ROXAS ----------------
+
 function Roxas() {
   if (achtergrond <= 1) {
     image(Roxas1, 200, 200, 200, 200);
   }
+
+  // Idle-animatie in de drie werelden.
+  if (achtergrond >= 4) {
+    if (heartlessAanwezig == false) {
+      if (achtergrond == 4) {
+        tekenVideo(roxasIdleB);
+      }
+      if (achtergrond == 5) {
+        tekenVideo(roxasIdleA);
+      }
+      if (achtergrond == 6) {
+        tekenVideo(roxasIdleC);
+      }
+    }
+  }
 }
+
+// ---------------- ETEN ----------------
 
 function EtenMove() {
   if (EtenClicked == true && etenScherm()) {
@@ -237,138 +653,254 @@ function EtenMove() {
 }
 
 function Eten() {
-  if (EtenClicked == false && etenTeZien()) {
+  // alleen te zien als je nog ijsjes hebt
+  if (EtenClicked == false && etenTeZien() && aantalIjsjes > 0) {
     image(SeaSaltIceCream, 50, 50, 50, 100);
+
+    fill(255);
+    stroke(0);
+    strokeWeight(3);
+    text("x" + aantalIjsjes, 105, 100);
+    noStroke();
   }
 }
+
+// ---------------- SHOP ----------------
 
 function Healing() {
   image(Potion, 250, 370, 150, 20);
   image(HiPotion, 250, 345, 150, 20);
+
   image(WorldMenuButton, 400, 355, 150, 50);
   image(SeaSaltIceCreamButton, 400, 330, 150, 50);
+
+  // munny, inventory en prijzen
+  fill(255);
+  stroke(0);
+  strokeWeight(3);
+  textSize(14);
+  text("munny: " + munny, 10, 25);
+  text("ijsjes: " + aantalIjsjes, 10, 45);
+  noStroke();
+  textSize(12);
 }
+// ---------------- MUISKLIKKEN ----------------
 
 function mousePressed() {
-  // knoppen in het menu
-  if (statsMenuKnop == true && mouseX > 600 && mouseX < 700) {
-    if (mouseY > 170 && mouseY < 195) {
-      achtergrond = 2; // shop
+
+  // Knoppen in het stats-menu.
+  if (statsMenuKnop == true &&
+      mouseX > 600 &&
+      mouseX < 700) {
+
+    // Tijdens het vechten werken de menuknoppen niet.
+    if ((gevechtActief || heartlessAanwezig) && mouseY > 170 && mouseY < 255) {
       return;
     }
-    if (mouseY > 200 && mouseY < 225 && etenScherm()) {
-      etenZichtbaar = !etenZichtbaar; // ijsje aan/uit
+
+    // Naar de shop.
+    if (mouseY > 170 && mouseY < 195) {
+      achtergrond = 2;
+      resetGevecht();
+      return;
+    }
+
+    // Eten aan- of uitzetten.
+    // Dit kan alleen als je niet aan het vechten bent.
+    if (mouseY > 200 &&
+        mouseY < 225 &&
+        etenScherm() &&
+        !gevechtActief &&
+        heartlessAanwezig == false) {
+
+      etenZichtbaar = !etenZichtbaar;
+      return;
+    }
+
+    // Slapen en energie terugkrijgen.
+    // Dit kan niet tijdens een gevecht.
+    if (mouseY > 230 &&
+        mouseY < 255 &&
+        !gevechtActief &&
+        heartlessAanwezig == false &&
+        !slapenActief) {
+
+      energie = min(100, energie + 50);
+      EtenClicked = false;
+      slapenActief = true;
+
+      sleepingVideo.time(0);
+      sleepingVideo.play();
+
       return;
     }
   }
 
-  if (mouseX > 600 && mouseX < 700
-      && mouseY > 300 && mouseY < 400) {
+  // Stats-menu openen of sluiten.
+  if (mouseX > 600 &&
+      mouseX < 700 &&
+      mouseY > 300 &&
+      mouseY < 400) {
+
     statsMenuKnop = !statsMenuKnop;
   }
 
-  // eten preset
-  if (mouseX > 50 && mouseX < 100
-      && mouseY > 50 && mouseY < 150
-      && etenTeZien()) {
+  // Een ijsje selecteren.
+  if (mouseX > 50 &&
+      mouseX < 100 &&
+      mouseY > 50 &&
+      mouseY < 150 &&
+      etenTeZien() &&
+      aantalIjsjes > 0 &&
+      heartlessAanwezig == false) {
+
     EtenClicked = true;
   }
 
-  // eten klikken op roxas
-  if (mouseX > 250 && mouseX < 350
-      && mouseY > 200 && mouseY < 300
-      && etenScherm()
-      && EtenClicked == true) {
+  // Het ijsje aan Roxas geven (alleen als Roxas idle is).
+  if (opRoxas() &&
+      etenScherm() &&
+      heartlessAanwezig == false &&
+      !slapenActief &&
+      EtenClicked == true) {
+
     honger = honger + 10;
+    aantalIjsjes = aantalIjsjes - 1; // ijsje is op
     EtenClicked = false;
+
     if (honger >= 100) {
       honger = 100;
       gezondheid = gezondheid - 10;
     }
   }
 
-  // potion
-  if (mouseX > 250 && mouseX < 400
-      && mouseY > 370 && mouseY < 390
-      && achtergrond == 2) {
+  // Potion gebruiken.
+  if (mouseX > 250 &&
+      mouseX < 400 &&
+      mouseY > 370 &&
+      mouseY < 390 &&
+      achtergrond == 2 &&
+      munny >= PRIJS_POTION) {
+
+    munny = munny - PRIJS_POTION;
     gezondheid = gezondheid + 5;
+
     if (gezondheid >= 100) {
       gezondheid = 100;
       geluk = geluk - 10;
     }
   }
-  //munny mechanic
 
-  // hi-potion
-  if (mouseX > 250 && mouseX < 400
-      && mouseY > 345 && mouseY < 365
-      && achtergrond == 2) {
+  // Hi-Potion gebruiken.
+  if (mouseX > 250 &&
+      mouseX < 400 &&
+      mouseY > 345 &&
+      mouseY < 365 &&
+      achtergrond == 2 &&
+      munny >= PRIJS_HIPOTION) {
+
+    munny = munny - PRIJS_HIPOTION;
     gezondheid = gezondheid + 10;
+
     if (gezondheid >= 100) {
       gezondheid = 100;
       geluk = geluk - 10;
     }
   }
-  //munny mechanic
 
-  // world1
-  if (mouseX > 120 && mouseX < 120 + 170
-      && mouseY > 10 && mouseY < 10 + 190
-      && achtergrond == 3) {
+  // Wereld 1: Halloween Town.
+  if (mouseX > 120 &&
+      mouseX < 120 + 170 &&
+      mouseY > 10 &&
+      mouseY < 10 + 190 &&
+      achtergrond == 3) {
+
     achtergrond = 4;
+    resetGevecht();
   }
 
-  // World2
-  if (mouseX > 100 && mouseX < 100 + 170
-      && mouseY > 170 && mouseY < 170 + 190
-      && achtergrond == 3) {
+  // Wereld 2: Agrabah.
+  if (mouseX > 100 &&
+      mouseX < 100 + 170 &&
+      mouseY > 170 &&
+      mouseY < 170 + 190 &&
+      achtergrond == 3) {
+
     achtergrond = 5;
+    resetGevecht();
   }
 
-  // World3
-  if (mouseX > 450 && mouseX < 450 + 170
-      && mouseY > 200 && mouseY < 200 + 190
-      && achtergrond == 3) {
+  // Wereld 3: Olympus Coliseum.
+  if (mouseX > 450 &&
+      mouseX < 450 + 170 &&
+      mouseY > 200 &&
+      mouseY < 200 + 190 &&
+      achtergrond == 3) {
+
     achtergrond = 6;
+    resetGevecht();
   }
 
-  // World4
-  if (mouseX > 300 && mouseX < 300 + 150
-      && mouseY > 50 && mouseY < 50 + 170
-      && achtergrond == 3) {
+  // Terug naar de eerste achtergrond.
+  if (mouseX > 300 &&
+      mouseX < 300 + 150 &&
+      mouseY > 50 &&
+      mouseY < 50 + 170 &&
+      achtergrond == 3) {
+
     achtergrond = 0;
   }
 
-  if (mouseX > 400 && mouseX < 550
-      && mouseY > 355 && mouseY < 405
-      && achtergrond == 2) {
+  // Vanuit de shop terug naar de wereldkaart.
+  if (mouseX > 400 &&
+      mouseX < 550 &&
+      mouseY > 355 &&
+      mouseY < 405 &&
+      achtergrond == 2) {
+
     achtergrond = 3;
-    // ijsje ++;
-    //munny = munny -15
   }
-  if (mouseX > 400 && mouseX < 550
-      && mouseY > 330 && mouseY < 380
-      && achtergrond == 2) {
+
+  // Een ijsje kopen.
+  if (mouseX > 400 &&
+      mouseX < 550 &&
+      mouseY > 330 &&
+      mouseY < 380 &&
+      achtergrond == 2 &&
+      munny >= PRIJS_IJSJE) {
+
+    munny = munny - PRIJS_IJSJE;
+    aantalIjsjes = aantalIjsjes + 1;
   }
 }
 
+// ---------------- TOETSENBORD ----------------
+
 function keyPressed() {
+
+  // Tijdens de slaapvideo geen andere acties uitvoeren.
+  if (slapenActief) {
+    return;
+  }
+
+  // Spatiebalk om verder te gaan.
   if (keyCode == 32 && !dood()) {
+
     if (!roxasIntroStart && achtergrond <= 2) {
       achtergrond++;
       etenZichtbaar = false;
     }
+
     roxasIntroStart = false;
   }
 
-  // pijltjestoetsen: in een wereld speelt de aanvalsvideo af
-  if (keyCode === 37 && RoxasFight == true) {
-    hitLeft = true;
-    hitRight = false;
-    startVideo();
-  } else if (keyCode === 39 && RoxasFight == true) {
-    hitRight = true;
-    hitLeft = false;
-    startVideo();
+  // Pijltjestoetsen om aan te vallen.
+  if (RoxasFight == true && !dood()) {
+
+    if (keyCode === 37) {
+      Slaan("L");
+    } else if (keyCode === 39) {
+      Slaan("R");
+    }
   }
 }
