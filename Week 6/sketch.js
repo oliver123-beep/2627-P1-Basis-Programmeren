@@ -111,14 +111,7 @@ function draw() {
 function VideoTekenen() {
   if (videoSpeelt == true && RoxasFight == true) {
     if (hitLeft == true) {
-      // gespiegeld voor links
-      push();
-      translate(350 + 200, 0);
-      scale(-1, 1);
-      image(vid, 0, 0, 400, 400);
-      pop();
-    } else {
-      image(vid, 150, 0, 400, 400);
+      image(vid, 0, 0, 700, 400);
     }
   }
 }
